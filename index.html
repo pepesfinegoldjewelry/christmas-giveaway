@@ -1,0 +1,1211 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4f7f4">
+
+<title>PFGJI Membership Registration</title>
+
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f4f7f4;
+  color: #203027;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 6px 24px #0001;
+}
+
+h1 {
+  text-align: center;
+  color: #176b3a;
+  margin-top: 0;
+}
+
+p {
+  line-height: 1.5;
+}
+
+.muted {
+  color: #647067;
+  font-size: 14px;
+}
+
+label {
+  display: block;
+  font-weight: 700;
+  margin: 16px 0 7px;
+}
+
+input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ccd5ce;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+input[readonly] {
+  background: #f2f5f3;
+}
+
+button {
+  display: block;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: 50px;
+  border: 0;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: 12px;
+}
+
+.primary {
+  background: #19703e;
+  color: #fff;
+}
+
+.secondary {
+  background: #e9efeb;
+  color: #203027;
+}
+
+button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.msg {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #edf1ee;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.success {
+  background: #e2f6e8;
+  color: #155c2f;
+}
+
+.error {
+  background: #fde8e8;
+  color: #8b2020;
+}
+
+#reader {
+  width: 100%;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+#reader video {
+  max-width: 100%;
+}
+
+#reader:empty {
+  display: none;
+}
+
+#customerType {
+  background: #f2f5f3;
+  font-weight: 700;
+}
+
+.help {
+  margin-top: 8px;
+  color: #647067;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0;
+  color: #7a847d;
+  font-size: 13px;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: #dfe5e1;
+}
+
+#registerButton:disabled {
+  opacity: .55;
+}
+</style>
+</head>
+
+<body>
+
+<main class="wrap">
+
+  <h1>🎄 PFGJI Membership</h1>
+
+  <p>
+    Register your permanent PFGJI Membership QR card.
+    Scan the QR code printed on your membership card, or enter the
+    Membership ID manually.
+  </p>
+
+
+  <!-- ==========================================
+       SCAN MEMBERSHIP QR
+       ========================================== -->
+
+  <button
+    id="startScan"
+    class="secondary"
+    type="button"
+  >
+    Scan Membership QR
+  </button>
+
+  <div id="reader"></div>
+
+
+  <!-- ==========================================
+       MEMBERSHIP ID
+       ========================================== -->
+
+  <label for="qrId">
+    Membership ID
+  </label>
+
+  <input
+    id="qrId"
+    placeholder="Example: PFGJI-ABCD-2345"
+    autocomplete="off"
+    autocapitalize="characters"
+    spellcheck="false"
+    maxlength="14"
+  >
+
+  <p class="help">
+    You can scan the QR code or type the Membership ID printed on your card.
+  </p>
+
+
+  <!-- ==========================================
+       VERIFY BUTTON
+       ========================================== -->
+
+  <button
+    id="verifyButton"
+    class="secondary"
+    type="button"
+  >
+    Verify Membership ID
+  </button>
+
+
+  <!-- ==========================================
+       MEMBERSHIP INFORMATION
+       ========================================== -->
+
+  <div
+    id="membershipInfo"
+    class="msg"
+    aria-live="polite"
+  >
+    Please scan or enter your Membership ID, then verify it.
+  </div>
+
+
+  <!-- ==========================================
+       CUSTOMER TYPE
+       ========================================== -->
+
+  <label for="customerType">
+    Customer Type
+  </label>
+
+  <input
+    id="customerType"
+    readonly
+    placeholder="Assigned automatically"
+  >
+
+  <p class="help">
+    Customer Type is assigned by the system and cannot be changed here.
+  </p>
+
+
+  <!-- ==========================================
+       FULL NAME
+       ========================================== -->
+
+  <label for="customerName">
+    Full Name
+  </label>
+
+  <input
+    id="customerName"
+    placeholder="Enter your full name"
+    minlength="2"
+    maxlength="100"
+    autocomplete="name"
+    disabled
+  >
+
+
+  <!-- ==========================================
+       FACEBOOK NAME
+       ========================================== -->
+
+  <label for="facebookName">
+    Facebook Name
+  </label>
+
+  <input
+    id="facebookName"
+    placeholder="Enter your Facebook name"
+    minlength="2"
+    maxlength="100"
+    autocomplete="off"
+    disabled
+  >
+
+
+  <!-- ==========================================
+       REGISTER
+       ========================================== -->
+
+  <button
+    id="registerButton"
+    class="primary"
+    type="button"
+    disabled
+  >
+    Register Membership
+  </button>
+
+
+  <p class="muted">
+    Each Membership ID can only be registered once.
+    Each customer name can only be registered once.
+    Your Membership ID will also be used for the PFGJI Rewards System
+    and Christmas Giveaway.
+  </p>
+
+</main>
+
+
+<script>
+"use strict";
+
+
+// ==================================================
+// CONFIGURATION
+// ==================================================
+
+const API_URL =
+  "https://christmas-giveaway-api.pepesfinegoldjewelry.workers.dev/";
+
+const QR_PATTERN =
+  /^PFGJI-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
+
+
+// ==================================================
+// ELEMENTS
+// ==================================================
+
+const qrInput =
+  document.getElementById("qrId");
+
+const nameInput =
+  document.getElementById("customerName");
+
+const facebookInput =
+  document.getElementById("facebookName");
+
+const customerTypeInput =
+  document.getElementById("customerType");
+
+const info =
+  document.getElementById("membershipInfo");
+
+const registerButton =
+  document.getElementById("registerButton");
+
+const verifyButton =
+  document.getElementById("verifyButton");
+
+const scanButton =
+  document.getElementById("startScan");
+
+const reader =
+  document.getElementById("reader");
+
+
+// ==================================================
+// STATE
+// ==================================================
+
+let scanner = null;
+
+let scanning = false;
+
+let validMembership = false;
+
+let busy = false;
+
+
+// ==================================================
+// MESSAGE
+// ==================================================
+
+function setMessage(
+  message,
+  kind = ""
+) {
+
+  info.textContent =
+    message;
+
+  info.className =
+    "msg " + kind;
+}
+
+
+// ==================================================
+// NORMALIZE QR ID
+// ==================================================
+
+function normalizeQrId(value) {
+
+  return String(
+    value || ""
+  )
+    .trim()
+    .toUpperCase();
+}
+
+
+// ==================================================
+// NORMALIZE NAME
+// ==================================================
+
+function normalizeName(value) {
+
+  return String(
+    value || ""
+  )
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+
+// ==================================================
+// API
+// ==================================================
+
+async function api(
+  action,
+  values = {}
+) {
+
+  let response;
+
+  try {
+
+    response =
+      await fetch(
+        API_URL,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            action,
+            ...values
+          }),
+
+          cache: "no-store"
+        }
+      );
+
+  } catch (error) {
+
+    throw new Error(
+      "Could not connect to the membership service. " +
+      "Please check your internet connection and try again."
+    );
+  }
+
+
+  let result;
+
+  try {
+
+    result =
+      await response.json();
+
+  } catch {
+
+    throw new Error(
+      "The membership service returned an invalid response."
+    );
+  }
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      result.message ||
+      "The membership service returned an error."
+    );
+  }
+
+
+  return result;
+}
+
+
+// ==================================================
+// STOP SCANNER
+// ==================================================
+
+async function stopScanner() {
+
+  if (
+    scanner &&
+    scanning
+  ) {
+
+    try {
+
+      await scanner.stop();
+
+    } catch (error) {
+
+      console.warn(
+        "Could not stop scanner:",
+        error
+      );
+    }
+
+    scanning = false;
+  }
+}
+
+
+// ==================================================
+// RESET VERIFICATION
+// ==================================================
+
+function resetVerification() {
+
+  validMembership =
+    false;
+
+  customerTypeInput.value =
+    "";
+
+  nameInput.disabled =
+    true;
+
+  facebookInput.disabled =
+    true;
+
+  registerButton.disabled =
+    true;
+}
+
+
+// ==================================================
+// VERIFY MEMBERSHIP
+// ==================================================
+
+async function verifyMembership() {
+
+  if (busy) {
+    return;
+  }
+
+
+  const id =
+    normalizeQrId(
+      qrInput.value
+    );
+
+
+  // -----------------------------------------------
+  // EMPTY
+  // -----------------------------------------------
+
+  if (!id) {
+
+    resetVerification();
+
+    setMessage(
+      "Please scan or enter your Membership ID.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  // -----------------------------------------------
+  // FORMAT
+  // -----------------------------------------------
+
+  if (
+    !QR_PATTERN.test(id)
+  ) {
+
+    resetVerification();
+
+    setMessage(
+      "Invalid Membership ID format. " +
+      "It should look like PFGJI-ABCD-2345.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  busy = true;
+
+  verifyButton.disabled =
+    true;
+
+  registerButton.disabled =
+    true;
+
+  validMembership =
+    false;
+
+  customerTypeInput.value =
+    "";
+
+  setMessage(
+    "Verifying Membership ID..."
+  );
+
+
+  try {
+
+    const result =
+      await api(
+        "lookup",
+        {
+          qrId: id
+        }
+      );
+
+
+    if (
+      !result.success
+    ) {
+
+      resetVerification();
+
+      setMessage(
+        result.message ||
+        "Membership ID could not be verified.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    // ---------------------------------------------
+    // SUCCESS
+    // ---------------------------------------------
+
+    validMembership =
+      true;
+
+
+    qrInput.value =
+      id;
+
+
+    customerTypeInput.value =
+      result.customerType ||
+      "Assigned";
+
+
+    nameInput.disabled =
+      false;
+
+    facebookInput.disabled =
+      false;
+
+    registerButton.disabled =
+      false;
+
+
+    setMessage(
+      "Membership ID verified successfully. " +
+      "Your Customer Type is " +
+      (result.customerType || "assigned") +
+      ". Please enter your name and Facebook name.",
+      "success"
+    );
+
+
+    nameInput.focus();
+
+
+  } catch (error) {
+
+    resetVerification();
+
+    setMessage(
+      error.message,
+      "error"
+    );
+
+  } finally {
+
+    busy = false;
+
+    verifyButton.disabled =
+      false;
+  }
+}
+
+
+// ==================================================
+// HANDLE QR SCAN
+// ==================================================
+
+async function handleScan(
+  decodedText
+) {
+
+  if (busy) {
+    return;
+  }
+
+
+  const id =
+    normalizeQrId(
+      decodedText
+    );
+
+
+  if (
+    !QR_PATTERN.test(id)
+  ) {
+
+    setMessage(
+      "This is not a valid PFGJI Membership QR. " +
+      "Please scan the QR printed on the membership card.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  qrInput.value =
+    id;
+
+
+  await stopScanner();
+
+
+  scanButton.textContent =
+    "Scan Membership QR";
+
+
+  await verifyMembership();
+}
+
+
+// ==================================================
+// START / STOP SCANNER
+// ==================================================
+
+scanButton.addEventListener(
+  "click",
+  async function () {
+
+    if (scanning) {
+
+      await stopScanner();
+
+      scanButton.textContent =
+        "Scan Membership QR";
+
+      setMessage(
+        "Scanner stopped. Tap Scan Membership QR to try again."
+      );
+
+      return;
+    }
+
+
+    if (busy) {
+      return;
+    }
+
+
+    if (
+      typeof window.Html5Qrcode ===
+      "undefined"
+    ) {
+
+      setMessage(
+        "The scanner library did not load. " +
+        "Check your internet connection, refresh the page, and try again.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    scanButton.disabled =
+      true;
+
+    setMessage(
+      "Starting camera..."
+    );
+
+
+    try {
+
+      if (!scanner) {
+
+        scanner =
+          new Html5Qrcode(
+            "reader"
+          );
+      }
+
+
+      reader.style.display =
+        "block";
+
+
+      await scanner.start(
+
+        {
+          facingMode:
+            "environment"
+        },
+
+        {
+          fps: 10,
+
+          qrbox:
+            function (
+              width,
+              height
+            ) {
+
+              const size =
+                Math.floor(
+                  Math.min(
+                    width,
+                    height,
+                    280
+                  )
+                );
+
+              return {
+                width: size,
+                height: size
+              };
+            },
+
+          aspectRatio: 1
+        },
+
+        handleScan,
+
+        function () {
+          // Ignore frames that do not contain
+          // a readable QR code.
+        }
+      );
+
+
+      scanning =
+        true;
+
+      scanButton.textContent =
+        "Stop Scanner";
+
+
+      setMessage(
+        "Camera started. Point it at the QR code on your membership card."
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Scanner startup error:",
+        error
+      );
+
+
+      setMessage(
+        "Camera could not start. " +
+        "Allow camera access in Safari or Chrome, " +
+        "close other apps using the camera, and try again. " +
+        "Details: " +
+        (error.message || error),
+        "error"
+      );
+
+    } finally {
+
+      scanButton.disabled =
+        false;
+    }
+  }
+);
+
+
+// ==================================================
+// VERIFY BUTTON
+// ==================================================
+
+verifyButton.addEventListener(
+  "click",
+  async function () {
+
+    await verifyMembership();
+
+  }
+);
+
+
+// ==================================================
+// AUTO FORMAT QR ID
+// ==================================================
+
+qrInput.addEventListener(
+  "input",
+  function () {
+
+    const value =
+      normalizeQrId(
+        qrInput.value
+      );
+
+    qrInput.value =
+      value;
+
+
+    // If the user changes the ID after it was
+    // previously verified, require verification again.
+
+    if (
+      validMembership
+    ) {
+
+      validMembership =
+        false;
+
+      customerTypeInput.value =
+        "";
+
+      nameInput.disabled =
+        true;
+
+      facebookInput.disabled =
+        true;
+
+      registerButton.disabled =
+        true;
+
+
+      setMessage(
+        "Membership ID changed. Please verify the new Membership ID."
+      );
+    }
+  }
+);
+
+
+// ==================================================
+// REGISTER MEMBERSHIP
+// ==================================================
+
+registerButton.addEventListener(
+  "click",
+  async function () {
+
+    if (busy) {
+      return;
+    }
+
+
+    const id =
+      normalizeQrId(
+        qrInput.value
+      );
+
+
+    const name =
+      normalizeName(
+        nameInput.value
+      );
+
+
+    const facebookName =
+      normalizeName(
+        facebookInput.value
+      );
+
+
+    // -----------------------------------------------
+    // MEMBERSHIP VERIFICATION
+    // -----------------------------------------------
+
+    if (
+      !validMembership ||
+      !QR_PATTERN.test(id)
+    ) {
+
+      setMessage(
+        "Please scan or enter your Membership ID and verify it first.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    // -----------------------------------------------
+    // FULL NAME
+    // -----------------------------------------------
+
+    if (
+      name.length < 2 ||
+      name.length > 100
+    ) {
+
+      setMessage(
+        "Enter your full name (2–100 characters).",
+        "error"
+      );
+
+      nameInput.focus();
+
+      return;
+    }
+
+
+    // -----------------------------------------------
+    // FACEBOOK NAME
+    // -----------------------------------------------
+
+    if (
+      facebookName.length < 2 ||
+      facebookName.length > 100
+    ) {
+
+      setMessage(
+        "Enter your Facebook name (2–100 characters).",
+        "error"
+      );
+
+      facebookInput.focus();
+
+      return;
+    }
+
+
+    // -----------------------------------------------
+    // START REGISTRATION
+    // -----------------------------------------------
+
+    busy = true;
+
+    registerButton.disabled =
+      true;
+
+    verifyButton.disabled =
+      true;
+
+    scanButton.disabled =
+      true;
+
+    registerButton.textContent =
+      "Registering...";
+
+
+    try {
+
+      const result =
+        await api(
+          "register",
+          {
+            qrId: id,
+
+            name: name,
+
+            facebookName:
+              facebookName
+          }
+        );
+
+
+      setMessage(
+        result.message ||
+        "Registration finished.",
+        result.success
+          ? "success"
+          : "error"
+      );
+
+
+      if (
+        result.success
+      ) {
+
+        nameInput.value =
+          name;
+
+        facebookInput.value =
+          facebookName;
+
+        qrInput.value =
+          id;
+
+
+        nameInput.disabled =
+          true;
+
+        facebookInput.disabled =
+          true;
+
+        qrInput.disabled =
+          true;
+
+        customerTypeInput.disabled =
+          true;
+
+        verifyButton.disabled =
+          true;
+
+        scanButton.disabled =
+          true;
+
+        registerButton.disabled =
+          true;
+
+        registerButton.textContent =
+          "Registration Complete";
+
+
+        setMessage(
+          result.message ||
+          "Membership registration completed successfully.",
+          "success"
+        );
+
+        return;
+      }
+
+
+      // Registration failed.
+      registerButton.disabled =
+        false;
+
+
+    } catch (error) {
+
+      setMessage(
+        error.message,
+        "error"
+      );
+
+      registerButton.disabled =
+        false;
+
+
+    } finally {
+
+      busy = false;
+
+      verifyButton.disabled =
+        false;
+
+      if (
+        !qrInput.disabled
+      ) {
+
+        scanButton.disabled =
+          false;
+      }
+
+
+      if (
+        !qrInput.disabled
+      ) {
+
+        registerButton.textContent =
+          "Register Membership";
+      }
+    }
+  }
+);
+
+
+// ==================================================
+// PAGE ERROR HANDLER
+// ==================================================
+
+window.addEventListener(
+  "error",
+  function (event) {
+
+    console.error(
+      "Page JavaScript error:",
+      event.message
+    );
+
+  }
+);
+
+</script>
+
+</body>
+</html>
+```
