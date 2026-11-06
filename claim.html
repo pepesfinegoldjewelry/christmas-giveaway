@@ -1,26 +1,14 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1"
->
-
-<meta
-  name="theme-color"
-  content="#f4f7f4"
->
-
-<title>PFGJI Christmas Giveaway — Staff Claim</title>
+<title>Christmas Giveaway — Staff Claim</title>
 
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
 <style>
-
 * {
   box-sizing: border-box;
 }
@@ -48,51 +36,24 @@ h1 {
   text-align: center;
 }
 
-h2,
-h3 {
-  color: #203027;
-}
-
 p {
   line-height: 1.5;
-}
-
-.small {
-  color: #647067;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-label {
-  display: block;
-  font-weight: 700;
-  margin: 16px 0 7px;
-}
-
-input {
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #ccd5ce;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-input:focus {
-  outline: none;
-  border-color: #19703e;
 }
 
 button {
   width: 100%;
   border: 0;
   border-radius: 8px;
-  padding: 13px;
+  padding: 14px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   margin-top: 12px;
-  min-height: 48px;
-  touch-action: manipulation;
+}
+
+button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
 }
 
 .primary {
@@ -111,18 +72,37 @@ button {
 }
 
 .logout {
-  background: #f1dddd;
-  color: #7d1d1d;
+  background: #f3dddd;
+  color: #9a1111;
 }
 
-button:disabled {
-  opacity: .55;
-  cursor: not-allowed;
+input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccd5ce;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+label {
+  display: block;
+  font-weight: 700;
+  margin: 18px 0 7px;
+}
+
+#reader {
+  width: 100%;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+#reader video {
+  max-width: 100%;
 }
 
 .msg {
   margin-top: 16px;
-  padding: 12px;
+  padding: 13px;
   border-radius: 8px;
   background: #edf1ee;
   line-height: 1.5;
@@ -139,17 +119,18 @@ button:disabled {
   color: #8b2020;
 }
 
-.warning {
-  background: #fff4d6;
-  color: #735400;
-}
-
 .card {
   display: none;
   border: 1px solid #d7ded9;
-  border-radius: 10px;
-  padding: 16px;
-  margin-top: 16px;
+  border-radius: 12px;
+  padding: 18px;
+  margin-top: 18px;
+  background: #fff;
+}
+
+.card h3 {
+  margin-top: 0;
+  color: #176b3a;
 }
 
 .detail {
@@ -169,54 +150,6 @@ button:disabled {
   overflow-wrap: anywhere;
 }
 
-.section {
-  margin-top: 20px;
-}
-
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 20px 0;
-  color: #7a847d;
-  font-size: 13px;
-}
-
-.divider::before,
-.divider::after {
-  content: "";
-  height: 1px;
-  flex: 1;
-  background: #dfe5e1;
-}
-
-#reader {
-  width: 100%;
-  margin-top: 12px;
-  overflow: hidden;
-}
-
-#reader video {
-  max-width: 100%;
-}
-
-#staffArea {
-  display: none;
-}
-
-#loginArea {
-  display: block;
-}
-
-#confirmButton,
-#nextButton {
-  display: none;
-}
-
-#logoutButton {
-  margin-top: 20px;
-}
-
 .status-unclaimed {
   color: #176b3a;
 }
@@ -225,84 +158,78 @@ button:disabled {
   color: #a32323;
 }
 
-.search-help {
-  margin-top: 7px;
+.small {
   color: #647067;
   font-size: 13px;
 }
 
+#confirmButton,
+#nextButton {
+  display: none;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  color: #7b857e;
+  font-size: 14px;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #d7ded9;
+}
+
+.search-help {
+  color: #647067;
+  font-size: 13px;
+  margin-top: 7px;
+}
+
+.ticket-list {
+  margin-top: 15px;
+}
+
+.result-item {
+  border: 1px solid #d7ded9;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.result-item:hover {
+  background: #f4f7f4;
+}
+
+.result-name {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.result-info {
+  font-size: 13px;
+  color: #647067;
+  margin-top: 5px;
+}
 </style>
-
 </head>
-
 
 <body>
 
 <main class="wrap">
 
-<h1>🎄 Christmas Giveaway</h1>
-
-
-<!-- ==================================================
-     STAFF LOGIN
-     ================================================== -->
-
-<section id="loginArea">
-
-  <h3>Staff Login</h3>
-
-  <p>
-    Enter the staff PIN to access the Christmas Giveaway
-    claiming system.
-  </p>
-
-  <label for="staffPin">
-    Staff PIN
-  </label>
-
-  <input
-    id="staffPin"
-    type="password"
-    inputmode="numeric"
-    autocomplete="current-password"
-    placeholder="Enter staff PIN"
-  >
-
-  <button
-    id="loginButton"
-    class="primary"
-    type="button"
-  >
-    Staff Login
-  </button>
-
-  <div
-    id="loginMessage"
-    class="msg"
-    role="status"
-    aria-live="polite"
-  >
-    Staff authentication required.
-  </div>
-
-</section>
-
-
-<!-- ==================================================
-     STAFF CLAIM AREA
-     ================================================== -->
-
-<section id="staffArea">
+  <h1>🎄 Christmas Giveaway</h1>
 
   <p>
     Staff: scan the customer's permanent Membership QR,
-    or search using their Membership ID or registered name.
+    or search using the Membership ID, customer name, or ticket number.
   </p>
-
-
-  <!-- ==================================================
-       SCANNER
-       ================================================== -->
 
   <button
     id="startScan"
@@ -314,71 +241,29 @@ button:disabled {
 
   <div id="reader"></div>
 
-
-  <!-- ==================================================
-       MEMBERSHIP ID
-       ================================================== -->
-
-  <label for="qrId">
-    Membership ID
+  <label for="searchInput">
+    Membership ID / Customer Name / Ticket No.
   </label>
 
   <input
-    id="qrId"
-    placeholder="Example: PFGJI-ABCD-2345"
+    id="searchInput"
+    placeholder="Scan QR, enter Membership ID, name, or ticket no."
     autocomplete="off"
     autocapitalize="characters"
     spellcheck="false"
-    maxlength="15"
   >
 
-
-  <button
-    id="checkButton"
-    class="primary"
-    type="button"
-  >
-    Search Membership
-  </button>
-
-
-  <div class="divider">
-    OR
+  <div class="search-help">
+    Example: PFGJI-T5FB-C6PF, customer name, Facebook name, or ticket number 2001.
   </div>
-
-
-  <!-- ==================================================
-       CUSTOMER NAME SEARCH
-       ================================================== -->
-
-  <label for="customerSearch">
-    Customer Name
-  </label>
-
-  <input
-    id="customerSearch"
-    placeholder="Enter registered customer name"
-    autocomplete="off"
-  >
-
-  <p class="search-help">
-    You can search using the customer's registered Full Name
-    or Facebook Name.
-  </p>
-
 
   <button
     id="searchButton"
-    class="secondary"
+    class="primary"
     type="button"
   >
-    Search Customer
+    Search
   </button>
-
-
-  <!-- ==================================================
-       MESSAGE
-       ================================================== -->
 
   <div
     id="message"
@@ -386,99 +271,52 @@ button:disabled {
     role="status"
     aria-live="polite"
   >
-    Ready to search or scan a Membership QR.
+    Ready to scan or search.
   </div>
 
-
-  <!-- ==================================================
-       CUSTOMER DETAILS
-       ================================================== -->
+  <div
+    id="results"
+    class="ticket-list"
+  ></div>
 
   <section
     id="card"
     class="card"
   >
 
-    <h3>
-      Verify Customer Details
-    </h3>
-
+    <h3>Customer Details</h3>
 
     <div class="detail">
-
-      <span class="label">
-        Membership ID
-      </span>
-
-      <span
-        id="showId"
-        class="value"
-      ></span>
-
+      <span class="label">Ticket No.</span>
+      <span id="showTicket" class="value"></span>
     </div>
 
-
     <div class="detail">
-
-      <span class="label">
-        Full Name
-      </span>
-
-      <span
-        id="showName"
-        class="value"
-      ></span>
-
+      <span class="label">Membership ID</span>
+      <span id="showId" class="value"></span>
     </div>
 
-
     <div class="detail">
-
-      <span class="label">
-        Facebook Name
-      </span>
-
-      <span
-        id="showFacebook"
-        class="value"
-      ></span>
-
+      <span class="label">Full Name</span>
+      <span id="showName" class="value"></span>
     </div>
 
-
     <div class="detail">
-
-      <span class="label">
-        Customer Type
-      </span>
-
-      <span
-        id="showType"
-        class="value"
-      ></span>
-
+      <span class="label">Facebook Name</span>
+      <span id="showFacebook" class="value"></span>
     </div>
 
+    <div class="detail">
+      <span class="label">Customer Type</span>
+      <span id="showType" class="value"></span>
+    </div>
 
     <div class="detail">
-
-      <span class="label">
-        Claim Status
-      </span>
-
-      <span
-        id="showStatus"
-        class="value"
-      ></span>
-
+      <span class="label">Claim Status</span>
+      <span id="showStatus" class="value"></span>
     </div>
 
   </section>
-
-
-  <!-- ==================================================
-       CONFIRM CLAIM
-       ================================================== -->
 
   <button
     id="confirmButton"
@@ -488,11 +326,6 @@ button:disabled {
     Confirm Claim
   </button>
 
-
-  <!-- ==================================================
-       NEXT CUSTOMER
-       ================================================== -->
-
   <button
     id="nextButton"
     class="secondary"
@@ -501,24 +334,11 @@ button:disabled {
     Scan / Search Next Customer
   </button>
 
-
   <p class="small">
-
-    Confirm the customer's Full Name, Facebook Name,
-    Customer Type, and Membership ID before handing over
-    the gift.
-
-    Once confirmed, the claim cannot be undone from this page.
-
-    The system prevents the same Membership ID from being
-    claimed twice.
-
+    Confirm only after checking the customer's Full Name,
+    Facebook Name, Customer Type, Membership ID, and Ticket No.
+    Once claimed, the gift cannot be claimed again.
   </p>
-
-
-  <!-- ==================================================
-       LOGOUT
-       ================================================== -->
 
   <button
     id="logoutButton"
@@ -528,200 +348,88 @@ button:disabled {
     Staff Logout
   </button>
 
-</section>
-
 </main>
 
-
 <script>
-
 "use strict";
 
-
-// ==================================================
-// CONFIGURATION
-// ==================================================
-
 const API_URL =
-  "https://christmas-giveaway-api.pepesfinegoldjewelry.workers.dev/";
+  "https://christmas-giveaway-api.mae15cabahug.workers.dev";
 
-const TOKEN_KEY =
-  "pfgji_staff_session";
-
-const QR_PATTERN =
-  /^PFGJI-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
-
-
-// ==================================================
-// ELEMENTS
-// ==================================================
-
-const loginArea =
-  document.getElementById(
-    "loginArea"
-  );
-
-const staffArea =
-  document.getElementById(
-    "staffArea"
-  );
-
-const staffPin =
-  document.getElementById(
-    "staffPin"
-  );
-
-const loginButton =
-  document.getElementById(
-    "loginButton"
-  );
-
-const loginMessage =
-  document.getElementById(
-    "loginMessage"
-  );
-
-const startScan =
-  document.getElementById(
-    "startScan"
-  );
-
-const reader =
-  document.getElementById(
-    "reader"
-  );
-
-const idInput =
-  document.getElementById(
-    "qrId"
-  );
-
-const customerSearch =
-  document.getElementById(
-    "customerSearch"
-  );
-
-const checkButton =
-  document.getElementById(
-    "checkButton"
-  );
+const searchInput =
+  document.getElementById("searchInput");
 
 const searchButton =
-  document.getElementById(
-    "searchButton"
-  );
+  document.getElementById("searchButton");
+
+const startScan =
+  document.getElementById("startScan");
+
+const reader =
+  document.getElementById("reader");
 
 const message =
-  document.getElementById(
-    "message"
-  );
+  document.getElementById("message");
+
+const results =
+  document.getElementById("results");
 
 const card =
-  document.getElementById(
-    "card"
-  );
+  document.getElementById("card");
 
 const confirmButton =
-  document.getElementById(
-    "confirmButton"
-  );
+  document.getElementById("confirmButton");
 
 const nextButton =
-  document.getElementById(
-    "nextButton"
-  );
+  document.getElementById("nextButton");
 
 const logoutButton =
-  document.getElementById(
-    "logoutButton"
-  );
-
-
-// ==================================================
-// STATE
-// ==================================================
+  document.getElementById("logoutButton");
 
 let scanner = null;
-
 let scanning = false;
-
 let busy = false;
-
 let currentCustomer = null;
 
-let sessionToken =
-  localStorage.getItem(
-    TOKEN_KEY
-  ) || "";
 
+/* --------------------------------------------------
+   MESSAGE
+-------------------------------------------------- */
 
-// ==================================================
-// MESSAGE
-// ==================================================
+function say(text, kind = "") {
 
-function say(
-  text,
-  kind = ""
-) {
+  message.textContent = text;
+  message.className = "msg " + kind;
 
-  message.textContent =
-    text;
-
-  message.className =
-    "msg " + kind;
 }
 
 
-// ==================================================
-// LOGIN MESSAGE
-// ==================================================
+/* --------------------------------------------------
+   API
+-------------------------------------------------- */
 
-function loginSay(
-  text,
-  kind = ""
-) {
-
-  loginMessage.textContent =
-    text;
-
-  loginMessage.className =
-    "msg " + kind;
-}
-
-
-// ==================================================
-// API
-// ==================================================
-
-async function api(
-  action,
-  values = {}
-) {
+async function api(action, values = {}) {
 
   let response;
 
-
   try {
 
-    response =
-      await fetch(
-        API_URL,
-        {
-          method: "POST",
+    response = await fetch(API_URL, {
 
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
+      method: "POST",
 
-          body: JSON.stringify({
-            action,
-            ...values
-          }),
+      headers: {
+        "Content-Type": "application/json"
+      },
 
-          cache: "no-store"
-        }
-      );
+      body: JSON.stringify({
+        action,
+        ...values
+      }),
+
+      cache: "no-store"
+
+    });
 
   } catch (error) {
 
@@ -729,24 +437,22 @@ async function api(
       "Could not connect to the giveaway service. " +
       "Please check your internet connection."
     );
-  }
 
+  }
 
   let result;
 
-
   try {
 
-    result =
-      await response.json();
+    result = await response.json();
 
   } catch {
 
     throw new Error(
       "The giveaway service returned an invalid response."
     );
-  }
 
+  }
 
   if (!response.ok) {
 
@@ -754,797 +460,34 @@ async function api(
       result.message ||
       "The giveaway service returned an error."
     );
+
   }
 
-
   return result;
+
 }
 
 
-// ==================================================
-// STOP SCANNER
-// ==================================================
+/* --------------------------------------------------
+   SCANNER
+-------------------------------------------------- */
 
 async function stopScanner() {
 
-  if (
-    scanner &&
-    scanning
-  ) {
+  if (scanner && scanning) {
 
     try {
-
       await scanner.stop();
-
     } catch (error) {
-
-      console.warn(
-        "Could not stop scanner:",
-        error
-      );
+      console.warn(error);
     }
 
-    scanning =
-      false;
+    scanning = false;
+
   }
-}
-
-
-// ==================================================
-// SAVE SESSION
-// ==================================================
-
-function saveSession(
-  token
-) {
-
-  sessionToken =
-    String(
-      token || ""
-    );
-
-  if (
-    sessionToken
-  ) {
-
-    localStorage.setItem(
-      TOKEN_KEY,
-      sessionToken
-    );
-
-  } else {
-
-    localStorage.removeItem(
-      TOKEN_KEY
-    );
-  }
-}
-
-
-// ==================================================
-// CLEAR SESSION
-// ==================================================
-
-function clearSession() {
-
-  sessionToken =
-    "";
-
-  localStorage.removeItem(
-    TOKEN_KEY
-  );
-}
-
-
-// ==================================================
-// SHOW STAFF AREA
-// ==================================================
-
-function showStaffArea() {
-
-  loginArea.style.display =
-    "none";
-
-  staffArea.style.display =
-    "block";
-
-  say(
-    "Staff login successful. Ready to scan or search a customer."
-  );
-}
-
-
-// ==================================================
-// SHOW LOGIN
-// ==================================================
-
-function showLogin() {
-
-  loginArea.style.display =
-    "block";
-
-  staffArea.style.display =
-    "none";
-
-  staffPin.value =
-    "";
-
-  staffPin.focus();
 
 }
 
-
-// ==================================================
-// CLEAR CUSTOMER DETAILS
-// ==================================================
-
-function clearDetails() {
-
-  currentCustomer =
-    null;
-
-  card.style.display =
-    "none";
-
-  confirmButton.style.display =
-    "none";
-
-  nextButton.style.display =
-    "none";
-
-  document.getElementById(
-    "showId"
-  ).textContent = "";
-
-  document.getElementById(
-    "showName"
-  ).textContent = "";
-
-  document.getElementById(
-    "showFacebook"
-  ).textContent = "";
-
-  document.getElementById(
-    "showType"
-  ).textContent = "";
-
-  document.getElementById(
-    "showStatus"
-  ).textContent = "";
-}
-
-
-// ==================================================
-// LOGIN
-// ==================================================
-
-async function login() {
-
-  if (busy) {
-    return;
-  }
-
-
-  const pin =
-    staffPin.value.trim();
-
-
-  if (!pin) {
-
-    loginSay(
-      "Please enter the staff PIN.",
-      "error"
-    );
-
-    staffPin.focus();
-
-    return;
-  }
-
-
-  busy =
-    true;
-
-  loginButton.disabled =
-    true;
-
-  loginButton.textContent =
-    "Logging in...";
-
-
-  try {
-
-    const result =
-      await api(
-        "login",
-        {
-          pin
-        }
-      );
-
-
-    if (
-      !result.success
-    ) {
-
-      loginSay(
-        result.message ||
-        "Invalid staff PIN.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    if (
-      !result.token
-    ) {
-
-      loginSay(
-        "Login succeeded but no session token was returned.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    saveSession(
-      result.token
-    );
-
-
-    loginSay(
-      "Login successful.",
-      "success"
-    );
-
-
-    showStaffArea();
-
-
-  } catch (error) {
-
-    loginSay(
-      error.message,
-      "error"
-    );
-
-  } finally {
-
-    busy =
-      false;
-
-    loginButton.disabled =
-      false;
-
-    loginButton.textContent =
-      "Staff Login";
-  }
-}
-
-
-// ==================================================
-// CHECK EXISTING SESSION
-// ==================================================
-
-async function checkExistingSession() {
-
-  if (!sessionToken) {
-
-    showLogin();
-
-    return;
-  }
-
-
-  try {
-
-    const result =
-      await api(
-        "check",
-        {
-          token:
-            sessionToken
-        }
-      );
-
-
-    if (
-      result.success
-    ) {
-
-      showStaffArea();
-
-      return;
-    }
-
-
-  } catch (error) {
-
-    console.warn(
-      "Existing session check failed:",
-      error
-    );
-  }
-
-
-  clearSession();
-
-  showLogin();
-}
-
-
-// ==================================================
-// SEARCH / CHECK CUSTOMER
-// ==================================================
-
-async function verifyMembership(
-  id
-) {
-
-  if (busy) {
-    return;
-  }
-
-
-  id =
-    String(
-      id || ""
-    )
-      .trim()
-      .toUpperCase();
-
-
-  if (
-    !QR_PATTERN.test(id)
-  ) {
-
-    say(
-      "Please enter or scan a valid Membership ID.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if (!sessionToken) {
-
-    clearSession();
-
-    showLogin();
-
-    return;
-  }
-
-
-  busy =
-    true;
-
-  clearDetails();
-
-  idInput.value =
-    id;
-
-  checkButton.disabled =
-    true;
-
-  searchButton.disabled =
-    true;
-
-
-  say(
-    "Searching Membership ID..."
-  );
-
-
-  try {
-
-    const result =
-      await api(
-        "searchClaim",
-        {
-          token:
-            sessionToken,
-
-          qrId:
-            id
-        }
-      );
-
-
-    if (
-      !result.success
-    ) {
-
-      if (
-        result.authenticated === false ||
-        result.code === "UNAUTHORIZED" ||
-        result.code === "SESSION_EXPIRED"
-      ) {
-
-        clearSession();
-
-        showLogin();
-
-        loginSay(
-          "Your staff session has expired. Please log in again.",
-          "warning"
-        );
-
-        return;
-      }
-
-
-      say(
-        result.message ||
-        "Customer could not be found.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    displayCustomer(
-      result
-    );
-
-
-  } catch (error) {
-
-    say(
-      error.message,
-      "error"
-    );
-
-  } finally {
-
-    busy =
-      false;
-
-    checkButton.disabled =
-      false;
-
-    searchButton.disabled =
-      false;
-  }
-}
-
-
-// ==================================================
-// SEARCH BY CUSTOMER NAME
-// ==================================================
-
-async function searchCustomer() {
-
-  if (busy) {
-    return;
-  }
-
-
-  const query =
-    String(
-      customerSearch.value || ""
-    )
-      .trim()
-      .replace(/\s+/g, " ");
-
-
-  if (
-    query.length < 2
-  ) {
-
-    say(
-      "Enter at least 2 characters of the customer's name.",
-      "error"
-    );
-
-    customerSearch.focus();
-
-    return;
-  }
-
-
-  if (!sessionToken) {
-
-    clearSession();
-
-    showLogin();
-
-    return;
-  }
-
-
-  busy =
-    true;
-
-  clearDetails();
-
-  checkButton.disabled =
-    true;
-
-  searchButton.disabled =
-    true;
-
-
-  say(
-    "Searching customer..."
-  );
-
-
-  try {
-
-    const result =
-      await api(
-        "searchClaim",
-        {
-          token:
-            sessionToken,
-
-          query:
-            query
-        }
-      );
-
-
-    if (
-      !result.success
-    ) {
-
-      if (
-        result.authenticated === false ||
-        result.code === "UNAUTHORIZED" ||
-        result.code === "SESSION_EXPIRED"
-      ) {
-
-        clearSession();
-
-        showLogin();
-
-        loginSay(
-          "Your staff session has expired. Please log in again.",
-          "warning"
-        );
-
-        return;
-      }
-
-
-      say(
-        result.message ||
-        "Customer could not be found.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    /*
-     * Depending on the Apps Script response,
-     * searchClaim may return either:
-     *
-     * result.customer
-     *
-     * or the customer fields directly.
-     *
-     * This supports both.
-     */
-
-    if (
-      result.customer
-    ) {
-
-      displayCustomer(
-        result.customer
-      );
-
-    } else {
-
-      displayCustomer(
-        result
-      );
-    }
-
-
-  } catch (error) {
-
-    say(
-      error.message,
-      "error"
-    );
-
-  } finally {
-
-    busy =
-      false;
-
-    checkButton.disabled =
-      false;
-
-    searchButton.disabled =
-      false;
-  }
-}
-
-
-// ==================================================
-// DISPLAY CUSTOMER
-// ==================================================
-
-function displayCustomer(
-  customer
-) {
-
-  currentCustomer =
-    customer;
-
-
-  const qrId =
-    customer.qrId ||
-    customer.customerId ||
-    customer.id ||
-    "";
-
-
-  const customerName =
-    customer.customerName ||
-    customer.name ||
-    "";
-
-
-  const facebookName =
-    customer.facebookName ||
-    "";
-
-
-  const customerType =
-    customer.customerType ||
-    "";
-
-
-  const status =
-    customer.status ||
-    "Unclaimed";
-
-
-  document.getElementById(
-    "showId"
-  ).textContent =
-    qrId || "—";
-
-
-  document.getElementById(
-    "showName"
-  ).textContent =
-    customerName || "—";
-
-
-  document.getElementById(
-    "showFacebook"
-  ).textContent =
-    facebookName || "—";
-
-
-  document.getElementById(
-    "showType"
-  ).textContent =
-    customerType || "—";
-
-
-  const statusElement =
-    document.getElementById(
-      "showStatus"
-    );
-
-
-  statusElement.textContent =
-    status;
-
-
-  statusElement.className =
-    "value " +
-    (
-      status === "Unclaimed"
-        ? "status-unclaimed"
-        : "status-claimed"
-    );
-
-
-  card.style.display =
-    "block";
-
-
-  if (
-    status === "Unclaimed"
-  ) {
-
-    confirmButton.style.display =
-      "block";
-
-    nextButton.style.display =
-      "none";
-
-
-    say(
-      "Customer found. Check all details before confirming the claim.",
-      "success"
-    );
-
-  } else {
-
-    confirmButton.style.display =
-      "none";
-
-    nextButton.style.display =
-      "block";
-
-
-    say(
-      "This Membership ID has already been claimed. Do not issue another gift.",
-      "error"
-    );
-  }
-}
-
-
-// ==================================================
-// HANDLE QR SCAN
-// ==================================================
-
-async function handleScan(
-  decodedText
-) {
-
-  if (busy) {
-    return;
-  }
-
-
-  const id =
-    String(
-      decodedText || ""
-    )
-      .trim()
-      .toUpperCase();
-
-
-  if (
-    !QR_PATTERN.test(id)
-  ) {
-
-    say(
-      "This is not a valid PFGJI Membership QR.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  await stopScanner();
-
-
-  startScan.textContent =
-    "Start Camera Scanner";
-
-
-  idInput.value =
-    id;
-
-
-  await verifyMembership(
-    id
-  );
-}
-
-
-// ==================================================
-// START CAMERA
-// ==================================================
 
 startScan.addEventListener(
   "click",
@@ -1558,17 +501,12 @@ startScan.addEventListener(
         "Start Camera Scanner";
 
       say(
-        "Scanner stopped."
+        "Scanner stopped. You can enter a value manually."
       );
 
       return;
+
     }
-
-
-    if (busy) {
-      return;
-    }
-
 
     if (
       typeof window.Html5Qrcode ===
@@ -1576,182 +514,473 @@ startScan.addEventListener(
     ) {
 
       say(
-        "The QR scanner library did not load. Check your internet connection and refresh the page.",
+        "QR scanner library did not load. Please refresh the page.",
         "error"
       );
 
       return;
+
     }
 
-
-    startScan.disabled =
-      true;
-
+    startScan.disabled = true;
 
     try {
 
       if (!scanner) {
 
         scanner =
-          new Html5Qrcode(
-            "reader"
-          );
+          new Html5Qrcode("reader");
+
       }
 
-
-      reader.style.display =
-        "block";
-
+      reader.style.display = "block";
 
       await scanner.start(
 
         {
-          facingMode:
-            "environment"
+          facingMode: "environment"
         },
 
         {
           fps: 10,
 
-          qrbox:
-            function (
-              width,
-              height
-            ) {
+          qrbox: function (
+            width,
+            height
+          ) {
 
-              const size =
-                Math.floor(
-                  Math.min(
-                    width,
-                    height,
-                    280
-                  )
-                );
+            const size =
+              Math.floor(
+                Math.min(
+                  width,
+                  height,
+                  280
+                )
+              );
 
-              return {
-                width: size,
-                height: size
-              };
-            },
+            return {
+              width: size,
+              height: size
+            };
+
+          },
 
           aspectRatio: 1
+
         },
 
-        handleScan,
+        async function (decodedText) {
+
+          const value =
+            String(decodedText || "")
+              .trim()
+              .toUpperCase();
+
+          /*
+             Automatically place the scanned
+             Membership ID into the ONE search box.
+          */
+
+          searchInput.value = value;
+
+          await stopScanner();
+
+          startScan.textContent =
+            "Start Camera Scanner";
+
+          say(
+            "QR scanned. Click Search to view the registered customer."
+          );
+
+        },
 
         function () {
           // Ignore unreadable frames.
         }
+
       );
 
-
-      scanning =
-        true;
-
+      scanning = true;
 
       startScan.textContent =
-        "Stop Camera Scanner";
-
+        "Stop Scanner";
 
       say(
         "Camera started. Point it at the customer's Membership QR."
       );
 
-
     } catch (error) {
 
-      console.error(
-        "Scanner startup error:",
-        error
-      );
-
+      console.error(error);
 
       say(
-        "Camera could not start. Allow camera access and make sure you are using the HTTPS GitHub Pages URL. Details: " +
+        "Camera could not start. Allow camera access and make sure you are using the HTTPS GitHub Pages URL. " +
         (error.message || error),
         "error"
       );
 
     } finally {
 
-      startScan.disabled =
-        false;
+      startScan.disabled = false;
+
     }
+
   }
 );
 
 
-// ==================================================
-// CHECK BUTTON
-// ==================================================
+/* --------------------------------------------------
+   CLEAR DETAILS
+-------------------------------------------------- */
 
-checkButton.addEventListener(
-  "click",
-  async function () {
+function clearDetails() {
 
-    await verifyMembership(
-      idInput.value
+  currentCustomer = null;
+
+  card.style.display = "none";
+
+  confirmButton.style.display =
+    "none";
+
+  nextButton.style.display =
+    "none";
+
+  results.innerHTML = "";
+
+}
+
+
+/* --------------------------------------------------
+   DISPLAY CUSTOMER
+-------------------------------------------------- */
+
+function displayCustomer(customer) {
+
+  currentCustomer = customer;
+
+  results.innerHTML = "";
+
+  document.getElementById(
+    "showTicket"
+  ).textContent =
+    customer.ticketNo || "—";
+
+  document.getElementById(
+    "showId"
+  ).textContent =
+    customer.qrId || "—";
+
+  document.getElementById(
+    "showName"
+  ).textContent =
+    customer.customerName || "—";
+
+  document.getElementById(
+    "showFacebook"
+  ).textContent =
+    customer.facebookName || "—";
+
+  document.getElementById(
+    "showType"
+  ).textContent =
+    customer.customerType || "—";
+
+  const status =
+    String(
+      customer.status || ""
+    ).trim();
+
+  const statusElement =
+    document.getElementById(
+      "showStatus"
+    );
+
+  statusElement.textContent =
+    status || "Unknown";
+
+  statusElement.className =
+    "value " +
+    (
+      status.toLowerCase() ===
+      "claimed"
+        ? "status-claimed"
+        : "status-unclaimed"
+    );
+
+  card.style.display = "block";
+
+  if (
+    status.toLowerCase() ===
+    "unclaimed"
+  ) {
+
+    confirmButton.style.display =
+      "block";
+
+    nextButton.style.display =
+      "block";
+
+    say(
+      "Customer found. Verify all details before confirming the claim.",
+      "success"
+    );
+
+  } else {
+
+    confirmButton.style.display =
+      "none";
+
+    nextButton.style.display =
+      "block";
+
+    say(
+      "This customer has already claimed the gift. The claim cannot be made again.",
+      "error"
     );
 
   }
-);
+
+}
 
 
-// ==================================================
-// ENTER ON MEMBERSHIP ID
-// ==================================================
+/* --------------------------------------------------
+   SEARCH
+-------------------------------------------------- */
 
-idInput.addEventListener(
-  "keydown",
-  function (event) {
+async function searchCustomer() {
 
-    if (
-      event.key === "Enter"
-    ) {
+  if (busy) return;
 
-      verifyMembership(
-        idInput.value
-      );
-    }
+  const query =
+    searchInput.value
+      .trim()
+      .replace(/\s+/g, " ");
+
+  if (!query) {
+
+    say(
+      "Enter a Membership ID, customer name, or ticket number.",
+      "error"
+    );
+
+    return;
+
   }
-);
+
+  busy = true;
+
+  searchButton.disabled = true;
+
+  confirmButton.style.display =
+    "none";
+
+  card.style.display =
+    "none";
+
+  results.innerHTML = "";
+
+  say("Searching...");
+
+  try {
+
+    const response =
+      await api(
+        "searchClaim",
+        {
+          query
+        }
+      );
+
+    if (!response.success) {
+
+      say(
+        response.message ||
+        "No registered customer found.",
+        "error"
+      );
+
+      return;
+
+    }
 
 
-// ==================================================
-// SEARCH BUTTON
-// ==================================================
+    /*
+       The backend should return only
+       registered customers.
+    */
+
+    const customers =
+      Array.isArray(response.customers)
+        ? response.customers
+        : Array.isArray(response.results)
+          ? response.results
+          : response.customer
+            ? [response.customer]
+            : [];
+
+
+    if (!customers.length) {
+
+      say(
+        "No registered customer was found for: " +
+        query,
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    /*
+       One exact match:
+       immediately display it.
+    */
+
+    if (customers.length === 1) {
+
+      displayCustomer(
+        customers[0]
+      );
+
+      return;
+
+    }
+
+
+    /*
+       Multiple matching names:
+       show selectable results.
+    */
+
+    say(
+      customers.length +
+      " registered customers found. Select the correct customer."
+    );
+
+
+    customers.forEach(
+      function (customer) {
+
+        const item =
+          document.createElement(
+            "div"
+          );
+
+        item.className =
+          "result-item";
+
+        item.innerHTML = `
+          <div class="result-name">
+            ${escapeHtml(
+              customer.customerName ||
+              "Unnamed customer"
+            )}
+          </div>
+
+          <div class="result-info">
+            Membership ID:
+            ${escapeHtml(
+              customer.qrId || "—"
+            )}
+          </div>
+
+          <div class="result-info">
+            Ticket No.:
+            ${escapeHtml(
+              String(
+                customer.ticketNo ||
+                "—"
+              )
+            )}
+          </div>
+
+          <div class="result-info">
+            Customer Type:
+            ${escapeHtml(
+              customer.customerType ||
+              "—"
+            )}
+          </div>
+
+          <div class="result-info">
+            Status:
+            ${escapeHtml(
+              customer.status ||
+              "—"
+            )}
+          </div>
+        `;
+
+        item.addEventListener(
+          "click",
+          function () {
+
+            displayCustomer(
+              customer
+            );
+
+          }
+        );
+
+        results.appendChild(item);
+
+      }
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    say(
+      error.message,
+      "error"
+    );
+
+  } finally {
+
+    busy = false;
+
+    searchButton.disabled = false;
+
+  }
+
+}
+
+
+/* --------------------------------------------------
+   SEARCH BUTTON
+-------------------------------------------------- */
 
 searchButton.addEventListener(
   "click",
-  async function () {
-
-    await searchCustomer();
-
-  }
+  searchCustomer
 );
 
 
-// ==================================================
-// ENTER ON CUSTOMER SEARCH
-// ==================================================
+/* --------------------------------------------------
+   ENTER KEY
+-------------------------------------------------- */
 
-customerSearch.addEventListener(
+searchInput.addEventListener(
   "keydown",
   function (event) {
 
-    if (
-      event.key === "Enter"
-    ) {
+    if (event.key === "Enter") {
+
+      event.preventDefault();
 
       searchCustomer();
+
     }
+
   }
 );
 
 
-// ==================================================
-// CONFIRM CLAIM
-// ==================================================
+/* --------------------------------------------------
+   CONFIRM CLAIM
+-------------------------------------------------- */
 
 confirmButton.addEventListener(
   "click",
@@ -1761,18 +990,14 @@ confirmButton.addEventListener(
       busy ||
       !currentCustomer
     ) {
-
       return;
     }
 
-
-    const status =
-      currentCustomer.status ||
-      "Unclaimed";
-
-
     if (
-      status !== "Unclaimed"
+      String(
+        currentCustomer.status || ""
+      ).toLowerCase() !==
+      "unclaimed"
     ) {
 
       say(
@@ -1780,60 +1005,42 @@ confirmButton.addEventListener(
         "error"
       );
 
+      confirmButton.style.display =
+        "none";
+
       return;
+
     }
 
 
-    const customerName =
-      currentCustomer.customerName ||
-      currentCustomer.name ||
-      "this customer";
-
-
-    const customerType =
-      currentCustomer.customerType ||
-      "Unknown";
-
-
-    const qrId =
-      currentCustomer.qrId ||
-      currentCustomer.customerId ||
-      currentCustomer.id ||
-      "";
-
-
-    if (!qrId) {
-
-      say(
-        "Membership ID is missing. The claim cannot continue.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    const ok =
+    const confirmed =
       window.confirm(
-        "Confirm claim for " +
-        customerName +
-        " (" +
-        customerType +
-        ")?\n\n" +
-        "Membership ID: " +
-        qrId +
-        "\n\n" +
-        "This action cannot be undone."
+
+        "Confirm claim?\n\n" +
+
+        "Customer: " +
+        currentCustomer.customerName +
+
+        "\nMembership ID: " +
+        currentCustomer.qrId +
+
+        "\nTicket No.: " +
+        currentCustomer.ticketNo +
+
+        "\nCustomer Type: " +
+        currentCustomer.customerType +
+
+        "\n\nThis cannot be undone."
+
       );
 
 
-    if (!ok) {
+    if (!confirmed) {
       return;
     }
 
 
-    busy =
-      true;
+    busy = true;
 
     confirmButton.disabled =
       true;
@@ -1845,71 +1052,50 @@ confirmButton.addEventListener(
 
     try {
 
-      const result =
+      const response =
         await api(
           "claim",
           {
-            token:
-              sessionToken,
-
             qrId:
-              qrId
+              currentCustomer.qrId
           }
         );
 
 
-      if (
-        !result.success
-      ) {
+      if (!response.success) {
 
-        if (
-          result.authenticated === false ||
-          result.code === "UNAUTHORIZED" ||
-          result.code === "SESSION_EXPIRED"
-        ) {
-
-          clearSession();
-
-          clearDetails();
-
-          showLogin();
-
-          loginSay(
-            "Your staff session has expired. Please log in again.",
-            "warning"
-          );
-
-          return;
-        }
+        say(
+          response.message ||
+          "Claim failed.",
+          "error"
+        );
 
 
         /*
-         * This is important:
-         *
-         * Another staff member may have claimed the
-         * same Membership ID between the search and
-         * the confirmation.
-         */
+           If another staff member claimed it
+           first, immediately remove the
+           Confirm Claim button.
+        */
 
         if (
-          result.status === "Claimed"
+          String(
+            response.status || ""
+          ).toLowerCase() ===
+          "claimed"
         ) {
 
           currentCustomer.status =
             "Claimed";
-
 
           document.getElementById(
             "showStatus"
           ).textContent =
             "Claimed";
 
-
           document.getElementById(
             "showStatus"
           ).className =
             "value status-claimed";
-
 
           confirmButton.style.display =
             "none";
@@ -1917,83 +1103,67 @@ confirmButton.addEventListener(
           nextButton.style.display =
             "block";
 
-
-          say(
-            "This customer was already claimed. No duplicate gift was issued.",
-            "error"
-          );
-
-          return;
         }
 
-
-        say(
-          result.message ||
-          "Claim failed. Please try again.",
-          "error"
-        );
-
         return;
+
       }
 
 
-      // -----------------------------------------------
-      // SUCCESS
-      // -----------------------------------------------
+      /*
+         Claim succeeded.
+      */
 
       currentCustomer.status =
         "Claimed";
-
 
       document.getElementById(
         "showStatus"
       ).textContent =
         "Claimed";
 
-
       document.getElementById(
         "showStatus"
       ).className =
         "value status-claimed";
 
-
       confirmButton.style.display =
         "none";
-
 
       nextButton.style.display =
         "block";
 
-
       say(
-        "Claim recorded successfully. You may now hand over the gift.",
+        "Claim recorded successfully. The gift may now be handed to the customer.",
         "success"
       );
 
 
     } catch (error) {
 
+      console.error(error);
+
       say(
         error.message,
         "error"
       );
 
-
     } finally {
 
-      busy =
-        false;
+      busy = false;
 
       confirmButton.disabled =
         false;
+
     }
+
   }
 );
 
 
-// ==================================================
-// NEXT CUSTOMER
-// ==================================================
+/* --------------------------------------------------
+   NEXT CUSTOMER
+-------------------------------------------------- */
 
 nextButton.addEventListener(
   "click",
@@ -2001,68 +1171,29 @@ nextButton.addEventListener(
 
     await stopScanner();
 
-
-    idInput.value =
-      "";
-
-    customerSearch.value =
-      "";
-
+    searchInput.value = "";
 
     clearDetails();
-
 
     say(
       "Ready to scan or search the next customer."
     );
 
-
-    idInput.focus();
   }
 );
 
 
-// ==================================================
-// LOGOUT
-// ==================================================
+/* --------------------------------------------------
+   LOGOUT
+-------------------------------------------------- */
 
 logoutButton.addEventListener(
   "click",
   async function () {
 
-    if (
-      busy
-    ) {
-
-      return;
-    }
-
-
-    const confirmed =
-      window.confirm(
-        "Log out of the staff claiming system?"
-      );
-
-
-    if (!confirmed) {
-      return;
-    }
-
-
     try {
 
-      if (
-        sessionToken
-      ) {
-
-        await api(
-          "logout",
-          {
-            token:
-              sessionToken
-          }
-        );
-      }
+      await api("logout");
 
     } catch (error) {
 
@@ -2071,68 +1202,37 @@ logoutButton.addEventListener(
         error
       );
 
-    } finally {
-
-      await stopScanner();
-
-      clearSession();
-
-      clearDetails();
-
-      idInput.value =
-        "";
-
-      customerSearch.value =
-        "";
-
-      showLogin();
-
-      loginSay(
-        "You have been logged out.",
-        "success"
-      );
     }
+
+    /*
+       The login page should be your
+       claim login page. Change this
+       filename if yours is different.
+    */
+
+    window.location.href =
+      "login.html";
+
   }
 );
 
 
-// ==================================================
-// STAFF PIN ENTER KEY
-// ==================================================
+/* --------------------------------------------------
+   HTML ESCAPE
+-------------------------------------------------- */
 
-staffPin.addEventListener(
-  "keydown",
-  function (event) {
+function escapeHtml(value) {
 
-    if (
-      event.key === "Enter"
-    ) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
-      login();
-    }
-  }
-);
-
-
-// ==================================================
-// LOGIN BUTTON
-// ==================================================
-
-loginButton.addEventListener(
-  "click",
-  login
-);
-
-
-// ==================================================
-// INITIALIZE
-// ==================================================
-
-checkExistingSession();
+}
 
 </script>
 
 </body>
-
 </html>
-```
