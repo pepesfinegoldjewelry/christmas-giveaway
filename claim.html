@@ -1034,28 +1034,118 @@ async function logout() {
    SCANNER
 ================================================== */
 
+let cameraTrack = null;
+let zoomControl = null;
+
+
 async function stopScanner() {
 
-  if (
-    scanner &&
-    scanning
-  ) {
+  if (scanner && scanning) {
 
     try {
-
       await scanner.stop();
-
     } catch (error) {
-
       console.warn(
         "Could not stop scanner:",
         error
       );
     }
-
-    scanning =
-      false;
   }
+
+  scanning = false;
+
+  // Remove the zoom control when the scanner stops.
+  if (zoomControl) {
+    zoomControl.remove();
+    zoomControl = null;
+  }
+
+  cameraTrack = null;
+
+  reader.innerHTML = "";
+}
+
+
+function addZoomControl() {
+
+  if (zoomControl || !cameraTrack) {
+    return;
+  }
+
+  const capabilities =
+    typeof cameraTrack.getCapabilities === "function"
+      ? cameraTrack.getCapabilities()
+      : {};
+
+  if (
+    !capabilities.zoom ||
+    typeof capabilities.zoom.min !== "number" ||
+    typeof capabilities.zoom.max !== "number"
+  ) {
+    return;
+  }
+
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.style.marginTop = "10px";
+  wrapper.style.padding = "8px 0";
+
+  const label =
+    document.createElement("label");
+
+  label.textContent =
+    "Camera Zoom";
+
+  label.style.margin = "0 0 5px";
+  label.style.fontSize = "13px";
+
+  const slider =
+    document.createElement("input");
+
+  slider.type = "range";
+  slider.min = capabilities.zoom.min;
+  slider.max = capabilities.zoom.max;
+  slider.step =
+    typeof capabilities.zoom.step === "number"
+      ? capabilities.zoom.step
+      : 0.1;
+  slider.value =
+    capabilities.zoom.min;
+
+  slider.style.margin = "0";
+  slider.style.padding = "0";
+
+  slider.addEventListener(
+    "input",
+    async function() {
+
+      try {
+        await cameraTrack.applyConstraints({
+          advanced: [
+            {
+              zoom: Number(slider.value)
+            }
+          ]
+        });
+      } catch (error) {
+        console.warn(
+          "Could not apply camera zoom:",
+          error
+        );
+      }
+    }
+  );
+
+  wrapper.appendChild(label);
+  wrapper.appendChild(slider);
+
+  reader.parentElement.insertBefore(
+    wrapper,
+    reader.nextSibling
+  );
+
+  zoomControl = wrapper;
 }
 
 
@@ -1064,7 +1154,6 @@ async function startScanner() {
   if (busy) {
     return;
   }
-
 
   if (
     typeof window.Html5Qrcode ===
@@ -1079,21 +1168,21 @@ async function startScanner() {
     return;
   }
 
-
   try {
 
     if (!scanner) {
-
       scanner =
         new Html5Qrcode(
           "reader"
         );
     }
 
-
     startScanButton.disabled =
       true;
 
+    say(
+      "Starting camera..."
+    );
 
     await scanner.start(
 
@@ -1103,44 +1192,45 @@ async function startScanner() {
       },
 
       {
-        fps: 10,
+        fps: 15,
 
-        qrbox:
-          function(
-            width,
-            height
-          ) {
+        qrbox: {
+          width: 175,
+          height: 175
+        },
 
-            const size =
-              Math.floor(
-                Math.min(
-                  width,
-                  height,
-                  280
-                )
-              );
+        aspectRatio: 1,
 
-            return {
-              width: size,
-              height: size
-            };
+        videoConstraints: {
+          facingMode: {
+            ideal: "environment"
           },
-
-        aspectRatio: 1
+          width: {
+            ideal: 1920
+          },
+          height: {
+            ideal: 1080
+          }
+        }
       },
 
       async function(
         decodedText
       ) {
 
-        if (busy) {
+        if (busy || !scanning) {
           return;
         }
 
+        // Stop immediately so the same QR cannot be
+        // processed repeatedly by consecutive frames.
         await stopScanner();
 
         startScanButton.textContent =
           "Start Camera Scanner";
+
+        searchInput.value =
+          String(decodedText || "").trim();
 
         await searchCustomer(
           decodedText
@@ -1152,15 +1242,39 @@ async function startScanner() {
       }
     );
 
+    scanning = true;
 
-    scanning =
-      true;
+    // Get the actual camera video track so zoom can be
+    // enabled on devices that support it.
+    try {
+
+      const video =
+        reader.querySelector("video");
+
+      if (video && video.srcObject) {
+
+        const tracks =
+          video.srcObject.getVideoTracks();
+
+        if (tracks.length > 0) {
+          cameraTrack = tracks[0];
+          addZoomControl();
+        }
+      }
+
+    } catch (error) {
+
+      console.warn(
+        "Could not initialize camera controls:",
+        error
+      );
+    }
 
     startScanButton.textContent =
       "Stop Camera Scanner";
 
     say(
-      "Camera started. Point it at the customer's Membership QR."
+      "Camera started. Center the customer's Membership QR inside the scan box."
     );
 
   } catch (error) {
@@ -1170,8 +1284,10 @@ async function startScanner() {
       error
     );
 
+    scanning = false;
+
     say(
-      "Camera could not start. Allow camera access and use the HTTPS GitHub Pages URL. " +
+      "Camera could not start. Allow camera access, close other apps using the camera, and use the HTTPS GitHub Pages URL. " +
       (error.message || error),
       "error"
     );
@@ -1810,6 +1926,38 @@ nextButton.addEventListener(
 logoutButton.addEventListener(
   "click",
   logout
+);
+
+
+/* ==================================================
+   CAMERA CLEANUP
+================================================== */
+
+document.addEventListener(
+  "visibilitychange",
+  async function() {
+
+    if (
+      document.hidden &&
+      scanning
+    ) {
+      await stopScanner();
+
+      startScanButton.textContent =
+        "Start Camera Scanner";
+    }
+  }
+);
+
+
+window.addEventListener(
+  "pagehide",
+  function() {
+
+    if (scanning) {
+      stopScanner();
+    }
+  }
 );
 
 
