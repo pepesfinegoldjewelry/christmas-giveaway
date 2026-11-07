@@ -4,8 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f4f7f4">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
 
-<title>Membership Registration</title>
+<title>PFGJI Membership Registration</title>
 
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
@@ -37,6 +40,40 @@ h1 {
   margin-top: 0;
 }
 
+.brand {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.logo-image {
+  display: block;
+  width: min(220px, 82%);
+  height: auto;
+  max-height: 115px;
+  object-fit: contain;
+  margin: 0 auto 12px;
+}
+
+.brand-title {
+  color: #176b3a;
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.brand-subtitle {
+  margin-top: 4px;
+  color: #647067;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.intro {
+  text-align: center;
+  color: #4f5d54;
+  margin: 18px 0 22px;
+}
+
 p {
   line-height: 1.5;
 }
@@ -50,6 +87,11 @@ label {
   display: block;
   font-weight: 700;
   margin: 16px 0 7px;
+  color: #304239;
+}
+
+.system-label {
+  color: #176b3a;
 }
 
 input {
@@ -133,6 +175,17 @@ button:disabled {
 #customerType {
   background: #f2f5f3;
   font-weight: 700;
+  color: #176b3a;
+}
+
+.section-label {
+  margin-top: 22px;
+  margin-bottom: 8px;
+  color: #176b3a;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
 }
 
 .help {
@@ -169,9 +222,17 @@ button:disabled {
 
 <main class="wrap">
 
-  <h1>🎄 PFGJI Membership</h1>
+  <div class="brand">
+    <img
+      class="logo-image"
+      src="pepes-logo.png"
+      alt="Pepe's Fine Gold Jewelry Inc."
+    >
+    <div class="brand-title">PFGJI Membership</div>
+    <div class="brand-subtitle">Membership Registration</div>
+  </div>
 
-  <p>
+  <p class="intro">
     Register your permanent PFGJI Membership QR card.
     Scan the QR code printed on your membership card, or enter the
     Membership ID manually.
@@ -181,6 +242,8 @@ button:disabled {
   <!-- ==========================================
        SCAN MEMBERSHIP QR
        ========================================== -->
+
+  <div class="section-label">Scan Membership QR</div>
 
   <button
     id="startScan"
@@ -245,7 +308,7 @@ button:disabled {
        CUSTOMER TYPE
        ========================================== -->
 
-  <label for="customerType">
+  <label for="customerType" class="system-label">
     Customer Type
   </label>
 
@@ -1310,3 +1373,4 @@ window.addEventListener(
 
 </body>
 </html>
+```
