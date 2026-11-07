@@ -172,12 +172,6 @@ button:disabled {
   display: none;
 }
 
-#customerType {
-  background: #f2f5f3;
-  font-weight: 700;
-  color: #176b3a;
-}
-
 .section-label {
   margin-top: 22px;
   margin-bottom: 8px;
@@ -254,6 +248,7 @@ button:disabled {
   </button>
 
   <div id="reader"></div>
+  <p class="help">For small 1×1 inch QR codes, hold the QR inside the scan box and move the camera closer until it is clear.</p>
 
 
   <!-- ==========================================
@@ -307,18 +302,7 @@ button:disabled {
   <!-- ==========================================
        CUSTOMER TYPE
        ========================================== -->
-
-  <label for="customerType" class="system-label">
-    Customer Type
-  </label>
-
-  <input
-    id="customerType"
-    readonly
-    placeholder="Assigned automatically"
-  >
-
-  <p class="help">
+<p class="help">
     Customer Type is assigned by the system and cannot be changed here.
   </p>
 
@@ -411,8 +395,6 @@ const nameInput =
 const facebookInput =
   document.getElementById("facebookName");
 
-const customerTypeInput =
-  document.getElementById("customerType");
 
 const info =
   document.getElementById("membershipInfo");
@@ -605,9 +587,6 @@ function resetVerification() {
   validMembership =
     false;
 
-  customerTypeInput.value =
-    "";
-
   nameInput.disabled =
     true;
 
@@ -684,9 +663,6 @@ async function verifyMembership() {
   validMembership =
     false;
 
-  customerTypeInput.value =
-    "";
-
   setMessage(
     "Verifying Membership ID..."
   );
@@ -731,11 +707,6 @@ async function verifyMembership() {
       id;
 
 
-    customerTypeInput.value =
-      result.customerType ||
-      "Assigned";
-
-
     nameInput.disabled =
       false;
 
@@ -747,10 +718,7 @@ async function verifyMembership() {
 
 
     setMessage(
-      "Membership ID verified successfully. " +
-      "Your Customer Type is " +
-      (result.customerType || "assigned") +
-      ". Please enter your name and Facebook name.",
+      "Membership ID verified successfully. Please enter your name and Facebook name.",
       "success"
     );
 
@@ -881,57 +849,38 @@ async function startScanner() {
     const scanConfig = {
       fps: 15,
 
-      qrbox: function(width, height) {
-
-        const size =
-          Math.max(
-            160,
-            Math.min(
-              Math.floor(
-                Math.min(width, height) * 0.72
-              ),
-              260
-            )
-          );
-
-        return {
-          width: size,
-          height: size
-        };
+      // Same scanner window/settings used by the Claim page.
+      // A fixed 175x175 scan area works well for small 1x1 inch QR codes.
+      qrbox: {
+        width: 175,
+        height: 175
       },
 
-      aspectRatio: 1
+      aspectRatio: 1,
+
+      videoConstraints: {
+        facingMode: {
+          ideal: "environment"
+        },
+        width: {
+          ideal: 1920
+        },
+        height: {
+          ideal: 1080
+        }
+      }
     };
 
-    try {
-
-      await scanner.start(
-        {
-          facingMode: {
-            exact: "environment"
-          }
-        },
-        scanConfig,
-        handleScan,
-        function () {}
-      );
-
-    } catch (rearCameraError) {
-
-      console.warn(
-        "Exact rear camera failed. Retrying with environment preference:",
-        rearCameraError
-      );
-
-      await scanner.start(
-        {
-          facingMode: "environment"
-        },
-        scanConfig,
-        handleScan,
-        function () {}
-      );
-    }
+    await scanner.start(
+      {
+        facingMode: "environment"
+      },
+      scanConfig,
+      handleScan,
+      function () {
+        // Ignore unreadable frames.
+      }
+    );
 
     scanning = true;
 
@@ -1072,9 +1021,6 @@ qrInput.addEventListener(
 
       validMembership =
         false;
-
-      customerTypeInput.value =
-        "";
 
       nameInput.disabled =
         true;
@@ -1248,9 +1194,6 @@ registerButton.addEventListener(
           true;
 
         qrInput.disabled =
-          true;
-
-        customerTypeInput.disabled =
           true;
 
         verifyButton.disabled =
