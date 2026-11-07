@@ -339,13 +339,32 @@ button:disabled {
   .stat-value { font-size: 25px; }
 }
 
+
+.brand-logo {
+  display: block;
+  width: min(240px, 78%);
+  height: auto;
+  margin: 0 auto 10px;
+}
+
 </style>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
 
 </head>
 
 <body>
 
 <main class="wrap">
+
+  <img
+    class="brand-logo"
+    src="pepes-logo.png"
+    alt="Pepe's Fine Gold Jewelry Inc."
+  >
 
   <h1>
     🎄 Christmas Giveaway
@@ -417,35 +436,23 @@ button:disabled {
       <div class="stat-card">
         <div class="stat-label">Registered</div>
         <div id="registeredCount" class="stat-value">0</div>
-        <!-- <div class="stat-note">Customers with a registered name</div> -->
       </div>
 
       <div class="stat-card">
         <div class="stat-label">Unregistered</div>
         <div id="unregisteredCount" class="stat-value">0</div>
-        <!-- <div class="stat-note">Memberships without a name</div> -->
       </div>
 
       <div class="stat-card">
         <div class="stat-label">Claimed</div>
         <div id="claimedCount" class="stat-value">0</div>
-        <!-- <div class="stat-note">Registered customers already claimed</div> -->
       </div>
 
       <div class="stat-card">
         <div class="stat-label">Unclaimed</div>
         <div id="unclaimedCount" class="stat-value">0</div>
-        <!-- <div class="stat-note">Registered customers not yet claimed</div> -->
       </div>
     </section>
-
-    <!-- <p class="instructions">
-
-      Staff: scan the customer's permanent Membership QR,
-      or search using the Membership ID, customer name,
-      Facebook name, or ticket number.
-
-    </p> -->
 
 
     <!-- CAMERA -->
@@ -474,14 +481,6 @@ button:disabled {
       autocomplete="off"
       autocapitalize="characters"
     >
-
-    <!-- <p class="small">
-      Examples:
-      PFGJI-T5FB-C6PF,
-      Juan Dela Cruz,
-      Juan's Facebook Name,
-      or ticket number 2005.
-    </p> -->
 
 
     <button
