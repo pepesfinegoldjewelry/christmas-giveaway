@@ -289,6 +289,56 @@ button:disabled {
   display: none;
 }
 
+/* ================================
+   GIVEAWAY STATISTICS
+================================ */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0 22px;
+}
+
+.stat-card {
+  background: #ffffff;
+  border: 1px solid #e2e7e3;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #647067;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.stat-value {
+  margin-top: 6px;
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 800;
+  color: #176b3a;
+}
+
+.stat-note {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #7a847d;
+}
+
+@media (max-width: 700px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .stat-card { padding: 13px; }
+  .stat-value { font-size: 25px; }
+}
+
 </style>
 
 </head>
@@ -358,6 +408,36 @@ button:disabled {
   ================================================== -->
 
   <section id="claimSection">
+
+    <!-- =================================================
+         GIVEAWAY STATISTICS
+    ================================================== -->
+
+    <section class="stats-grid" aria-label="Giveaway statistics">
+      <div class="stat-card">
+        <div class="stat-label">Registered</div>
+        <div id="registeredCount" class="stat-value">0</div>
+        <div class="stat-note">Customers with a registered name</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Unregistered</div>
+        <div id="unregisteredCount" class="stat-value">0</div>
+        <div class="stat-note">Memberships without a name</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Claimed</div>
+        <div id="claimedCount" class="stat-value">0</div>
+        <div class="stat-note">Registered customers already claimed</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Unclaimed</div>
+        <div id="unclaimedCount" class="stat-value">0</div>
+        <div class="stat-note">Registered customers not yet claimed</div>
+      </div>
+    </section>
 
     <p class="instructions">
 
@@ -650,6 +730,18 @@ const searchButton =
     "searchButton"
   );
 
+const registeredCount =
+  document.getElementById("registeredCount");
+
+const unregisteredCount =
+  document.getElementById("unregisteredCount");
+
+const claimedCount =
+  document.getElementById("claimedCount");
+
+const unclaimedCount =
+  document.getElementById("unclaimedCount");
+
 const message =
   document.getElementById(
     "message"
@@ -859,6 +951,38 @@ async function api(
 
 
 /* ==================================================
+   GIVEAWAY STATISTICS
+================================================== */
+
+function setStatValue(element, value) {
+  if (element) {
+    element.textContent = Number(value || 0).toLocaleString();
+  }
+}
+
+async function refreshStats() {
+  const token = getToken();
+  if (!token) return;
+
+  try {
+    const result = await api("stats", { token });
+
+    if (!result.success) {
+      console.warn("Could not load giveaway statistics:", result.message);
+      return;
+    }
+
+    setStatValue(registeredCount, result.registered);
+    setStatValue(unregisteredCount, result.unregistered);
+    setStatValue(claimedCount, result.claimed);
+    setStatValue(unclaimedCount, result.unclaimed);
+  } catch (error) {
+    console.warn("Could not load giveaway statistics:", error);
+  }
+}
+
+
+/* ==================================================
    SHOW / HIDE LOGIN
 ================================================== */
 
@@ -956,6 +1080,8 @@ async function login() {
     );
 
     showClaimPage();
+
+    await refreshStats();
 
     say(
       "Ready to scan or search a registered customer."
@@ -1763,6 +1889,7 @@ async function confirmClaim() {
     currentCustomer.status =
       "Claimed";
 
+    await refreshStats();
 
     displayCustomer(
       currentCustomer
