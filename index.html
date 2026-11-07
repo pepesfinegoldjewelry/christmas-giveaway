@@ -175,10 +175,6 @@ button:disabled {
   color: #647067;
 }
 
-#customerType {
-  background: #f2f5f3;
-  font-weight: 700;
-}
 
 .help {
   margin-top: 8px;
@@ -306,20 +302,6 @@ button:disabled {
        CUSTOMER TYPE
        ========================================== -->
 
-  <label for="customerType">
-    Customer Type
-  </label>
-
-  <input
-    id="customerType"
-    readonly
-    placeholder="Assigned automatically"
-  >
-
-  <p class="help">
-    Customer Type is assigned by the system and cannot be changed here.
-  </p>
-
 
   <!-- ==========================================
        FULL NAME
@@ -409,8 +391,6 @@ const nameInput =
 const facebookInput =
   document.getElementById("facebookName");
 
-const customerTypeInput =
-  document.getElementById("customerType");
 
 const info =
   document.getElementById("membershipInfo");
@@ -614,9 +594,6 @@ function resetVerification() {
   validMembership =
     false;
 
-  customerTypeInput.value =
-    "";
-
   nameInput.disabled =
     true;
 
@@ -693,9 +670,6 @@ async function verifyMembership() {
   validMembership =
     false;
 
-  customerTypeInput.value =
-    "";
-
   setMessage(
     "Verifying Membership ID..."
   );
@@ -740,11 +714,6 @@ async function verifyMembership() {
       id;
 
 
-    customerTypeInput.value =
-      result.customerType ||
-      "Assigned";
-
-
     nameInput.disabled =
       false;
 
@@ -757,9 +726,7 @@ async function verifyMembership() {
 
     setMessage(
       "Membership ID verified successfully. " +
-      "Your Customer Type is " +
-      (result.customerType || "assigned") +
-      ". Please enter your name and Facebook name.",
+      "Please enter your name and Facebook name.",
       "success"
     );
 
@@ -1213,9 +1180,6 @@ qrInput.addEventListener(
       validMembership =
         false;
 
-      customerTypeInput.value =
-        "";
-
       nameInput.disabled =
         true;
 
@@ -1388,9 +1352,6 @@ registerButton.addEventListener(
           true;
 
         qrInput.disabled =
-          true;
-
-        customerTypeInput.disabled =
           true;
 
         verifyButton.disabled =
