@@ -120,61 +120,20 @@ button:disabled {
   width: 100%;
   margin-top: 12px;
   overflow: hidden;
-  border-radius: 12px;
-  background: #111;
 }
 
 #reader video {
-  display: block;
-  width: 100% !important;
   max-width: 100%;
-  min-height: 220px;
-  object-fit: cover;
-  border-radius: 12px;
 }
 
 #reader:empty {
   display: none;
 }
 
-.scanner-controls {
-  display: none;
-  margin-top: 10px;
-  padding: 10px 12px;
+#customerType {
   background: #f2f5f3;
-  border-radius: 10px;
-}
-
-.scanner-controls.active {
-  display: block;
-}
-
-.scanner-controls label {
-  margin: 0 0 6px;
-  font-size: 13px;
   font-weight: 700;
 }
-
-.zoom-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-#zoomSlider {
-  flex: 1;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.zoom-value {
-  min-width: 48px;
-  text-align: right;
-  font-size: 13px;
-  color: #647067;
-}
-
 
 .help {
   margin-top: 8px;
@@ -203,39 +162,20 @@ button:disabled {
 #registerButton:disabled {
   opacity: .55;
 }
-
-.brand-logo {
-  display: block;
-  width: min(240px, 78%);
-  height: auto;
-  margin: 0 auto 10px;
-}
-
 </style>
-
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="manifest" href="manifest.json">
-
 </head>
 
 <body>
 
 <main class="wrap">
 
-  <img
-    class="brand-logo"
-    src="pepes-logo.png"
-    alt="Pepe's Fine Gold Jewelry Inc."
-  >
+  <h1>🎄 PFGJI Membership</h1>
 
-  <h1>Membership Registration</h1>
-
-  <!-- <p>
-    Register your Membership QR card.
+  <p>
+    Register your permanent PFGJI Membership QR card.
     Scan the QR code printed on your membership card, or enter the
     Membership ID manually.
-  </p> -->
+  </p>
 
 
   <!-- ==========================================
@@ -247,26 +187,10 @@ button:disabled {
     class="secondary"
     type="button"
   >
-    Scan QR
+    Scan Membership QR
   </button>
 
   <div id="reader"></div>
-
-  <div id="scannerControls" class="scanner-controls">
-    <label for="zoomSlider">Camera Zoom</label>
-    <div class="zoom-row">
-      <input
-        id="zoomSlider"
-        type="range"
-        min="1"
-        max="1"
-        step="0.1"
-        value="1"
-        aria-label="Camera zoom"
-      >
-      <span id="zoomValue" class="zoom-value">1×</span>
-    </div>
-  </div>
 
 
   <!-- ==========================================
@@ -308,18 +232,32 @@ button:disabled {
        MEMBERSHIP INFORMATION
        ========================================== -->
 
-  <!-- <div
+  <div
     id="membershipInfo"
     class="msg"
     aria-live="polite"
   >
     Please scan or enter your Membership ID, then verify it.
-  </div> -->
+  </div>
 
 
   <!-- ==========================================
        CUSTOMER TYPE
        ========================================== -->
+
+  <label for="customerType">
+    Customer Type
+  </label>
+
+  <input
+    id="customerType"
+    readonly
+    placeholder="Assigned automatically"
+  >
+
+  <p class="help">
+    Customer Type is assigned by the system and cannot be changed here.
+  </p>
 
 
   <!-- ==========================================
@@ -375,7 +313,8 @@ button:disabled {
   <p class="muted">
     Each Membership ID can only be registered once.
     Each customer name can only be registered once.
-    Your Membership ID will also be used for the Christmas Giveaway and Rewards.
+    Your Membership ID will also be used for the PFGJI Rewards System
+    and Christmas Giveaway.
   </p>
 
 </main>
@@ -409,6 +348,8 @@ const nameInput =
 const facebookInput =
   document.getElementById("facebookName");
 
+const customerTypeInput =
+  document.getElementById("customerType");
 
 const info =
   document.getElementById("membershipInfo");
@@ -425,15 +366,6 @@ const scanButton =
 const reader =
   document.getElementById("reader");
 
-const scannerControls =
-  document.getElementById("scannerControls");
-
-const zoomSlider =
-  document.getElementById("zoomSlider");
-
-const zoomValue =
-  document.getElementById("zoomValue");
-
 
 // ==================================================
 // STATE
@@ -447,13 +379,11 @@ let validMembership = false;
 
 let busy = false;
 
-let zoomSupported = false;
+let cameraStarting = false;
 
-let zoomMin = 1;
+let lastScannedId = "";
 
-let zoomMax = 1;
-
-let zoomStep = 0.1;
+let lastScanTime = 0;
 
 
 // ==================================================
@@ -577,29 +507,29 @@ async function api(
 
 async function stopScanner() {
 
-  if (
-    scanner &&
-    scanning
-  ) {
+  scanning = false;
 
-    try {
-
-      await scanner.stop();
-
-    } catch (error) {
-
-      console.warn(
-        "Could not stop scanner:",
-        error
-      );
-    }
-
-    scanning = false;
+  if (!scanner) {
+    return;
   }
 
-  scannerControls.classList.remove("active");
+  try {
+    const state =
+      typeof scanner.getState === "function"
+        ? scanner.getState()
+        : null;
 
-  reader.style.display = "none";
+    if (state === null || state === 2) {
+      await scanner.stop();
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "Could not stop scanner:",
+      error
+    );
+  }
 }
 
 
@@ -611,6 +541,9 @@ function resetVerification() {
 
   validMembership =
     false;
+
+  customerTypeInput.value =
+    "";
 
   nameInput.disabled =
     true;
@@ -688,6 +621,9 @@ async function verifyMembership() {
   validMembership =
     false;
 
+  customerTypeInput.value =
+    "";
+
   setMessage(
     "Verifying Membership ID..."
   );
@@ -732,6 +668,11 @@ async function verifyMembership() {
       id;
 
 
+    customerTypeInput.value =
+      result.customerType ||
+      "Assigned";
+
+
     nameInput.disabled =
       false;
 
@@ -744,7 +685,9 @@ async function verifyMembership() {
 
     setMessage(
       "Membership ID verified successfully. " +
-      "Please enter your name and Facebook name.",
+      "Your Customer Type is " +
+      (result.customerType || "assigned") +
+      ". Please enter your name and Facebook name.",
       "success"
     );
 
@@ -779,41 +722,46 @@ async function handleScan(
   decodedText
 ) {
 
-  if (busy) {
+  if (!scanning || busy || cameraStarting) {
     return;
   }
-
 
   const id =
     normalizeQrId(
       decodedText
     );
 
+  const now = Date.now();
+
+  if (
+    id === lastScannedId &&
+    now - lastScanTime < 2500
+  ) {
+    return;
+  }
+
+  lastScannedId = id;
+  lastScanTime = now;
 
   if (
     !QR_PATTERN.test(id)
   ) {
 
     setMessage(
-      "This is not a valid PFGJI Membership QR. " +
-      "Please scan the QR printed on the membership card.",
+      "QR detected, but it is not a valid PFGJI Membership QR.",
       "error"
     );
 
     return;
   }
 
-
   qrInput.value =
     id;
 
-
   await stopScanner();
-
 
   scanButton.textContent =
     "Scan Membership QR";
-
 
   await verifyMembership();
 }
@@ -823,147 +771,179 @@ async function handleScan(
 // START / STOP SCANNER
 // ==================================================
 
-async function setupZoomControl() {
+async function startScanner() {
 
-  zoomSupported = false;
-  zoomMin = 1;
-  zoomMax = 1;
-  zoomStep = 0.1;
-
-  scannerControls.classList.remove("active");
-
-  if (!scanner || !scanning) {
+  if (busy || scanning || cameraStarting) {
     return;
   }
 
+  if (typeof window.Html5Qrcode === "undefined") {
+
+    setMessage(
+      "The QR scanner library did not load. Please refresh the page and try again.",
+      "error"
+    );
+
+    return;
+  }
+
+  cameraStarting = true;
+  scanButton.disabled = true;
+
+  setMessage(
+    "Starting camera..."
+  );
+
   try {
 
-    const capabilities =
-      scanner.getRunningTrackCameraCapabilities();
+    if (scanner) {
+      try {
+        await scanner.stop();
+      } catch (_) {}
 
-    if (
-      !capabilities ||
-      !capabilities.zoom
-    ) {
-      return;
+      try {
+        await scanner.clear();
+      } catch (_) {}
     }
 
-    const zoom =
-      capabilities.zoom;
+    scanner = null;
+    reader.innerHTML = "";
+    reader.style.display = "block";
 
-    if (
-      typeof zoom.min !== "number" ||
-      typeof zoom.max !== "number"
-    ) {
-      return;
-    }
+    scanner = new Html5Qrcode(
+      "reader",
+      { verbose: false }
+    );
 
-    zoomMin = zoom.min;
-    zoomMax = zoom.max;
+    const scanConfig = {
+      fps: 15,
 
-    zoomStep =
-      typeof zoom.step === "number" && zoom.step > 0
-        ? zoom.step
-        : 0.1;
+      qrbox: function(width, height) {
 
-    zoomSupported =
-      zoomMax > zoomMin;
-
-    if (!zoomSupported) {
-      return;
-    }
-
-    const currentZoom =
-      typeof zoom.current === "number"
-        ? zoom.current
-        : zoomMin;
-
-    zoomSlider.min =
-      String(zoomMin);
-
-    zoomSlider.max =
-      String(zoomMax);
-
-    zoomSlider.step =
-      String(zoomStep);
-
-    zoomSlider.value =
-      String(
-        Math.min(
-          zoomMax,
+        const size =
           Math.max(
-            zoomMin,
-            currentZoom
-          )
-        )
+            160,
+            Math.min(
+              Math.floor(
+                Math.min(width, height) * 0.72
+              ),
+              260
+            )
+          );
+
+        return {
+          width: size,
+          height: size
+        };
+      },
+
+      aspectRatio: 1
+    };
+
+    try {
+
+      await scanner.start(
+        {
+          facingMode: {
+            exact: "environment"
+          }
+        },
+        scanConfig,
+        handleScan,
+        function () {}
       );
 
-    zoomValue.textContent =
-      Number(zoomSlider.value).toFixed(1) + "×";
+    } catch (rearCameraError) {
 
-    scannerControls.classList.add("active");
+      console.warn(
+        "Exact rear camera failed. Retrying with environment preference:",
+        rearCameraError
+      );
 
-  } catch (error) {
-
-    console.warn(
-      "Camera zoom is not available:",
-      error
-    );
-
-    zoomSupported = false;
-    scannerControls.classList.remove("active");
-  }
-}
-
-
-async function applyZoom(value) {
-
-  if (
-    !scanner ||
-    !scanning ||
-    !zoomSupported
-  ) {
-    return;
-  }
-
-  const zoom =
-    Math.min(
-      zoomMax,
-      Math.max(
-        zoomMin,
-        Number(value)
-      )
-    );
-
-  zoomValue.textContent =
-    zoom.toFixed(1) + "×";
-
-  try {
-
-    await scanner.applyVideoConstraints({
-      advanced: [
+      await scanner.start(
         {
-          zoom: zoom
-        }
-      ]
-    });
+          facingMode: "environment"
+        },
+        scanConfig,
+        handleScan,
+        function () {}
+      );
+    }
+
+    scanning = true;
+
+    scanButton.textContent =
+      "Stop Scanner";
+
+    setMessage(
+      "Camera started. Point the rear camera at the Membership QR."
+    );
 
   } catch (error) {
 
-    console.warn(
-      "Could not apply camera zoom:",
+    console.error(
+      "Scanner startup error:",
       error
     );
+
+    scanning = false;
+
+    if (scanner) {
+      try {
+        await scanner.stop();
+      } catch (_) {}
+
+      try {
+        await scanner.clear();
+      } catch (_) {}
+    }
+
+    scanner = null;
+    reader.innerHTML = "";
+
+    const message =
+      error && error.message
+        ? error.message
+        : String(error || "Unknown camera error.");
+
+    const lower =
+      message.toLowerCase();
+
+    if (
+      lower.includes("permission") ||
+      lower.includes("notallowed")
+    ) {
+
+      setMessage(
+        "Camera permission was denied. Allow camera access for this website, then try again.",
+        "error"
+      );
+
+    } else if (
+      lower.includes("notfound") ||
+      lower.includes("no camera")
+    ) {
+
+      setMessage(
+        "No camera was found on this device.",
+        "error"
+      );
+
+    } else {
+
+      setMessage(
+        "Camera could not start. Make sure this page is opened over HTTPS and no other app is using the camera. Details: " +
+        message,
+        "error"
+      );
+    }
+
+  } finally {
+
+    cameraStarting = false;
+    scanButton.disabled = false;
   }
 }
-
-
-zoomSlider.addEventListener(
-  "input",
-  function () {
-    applyZoom(zoomSlider.value);
-  }
-);
 
 
 scanButton.addEventListener(
@@ -984,175 +964,7 @@ scanButton.addEventListener(
       return;
     }
 
-
-    if (busy) {
-      return;
-    }
-
-
-    if (
-      typeof window.Html5Qrcode ===
-      "undefined"
-    ) {
-
-      setMessage(
-        "The scanner library did not load. " +
-        "Check your internet connection, refresh the page, and try again.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    scanButton.disabled =
-      true;
-
-    setMessage(
-      "Starting camera..."
-    );
-
-
-    try {
-
-      if (!scanner) {
-
-        scanner =
-          new Html5Qrcode(
-            "reader"
-          );
-      }
-
-
-      reader.style.display =
-        "block";
-
-
-      await scanner.start(
-
-        {
-          facingMode:
-            "environment"
-        },
-
-        {
-          fps: 15,
-
-          qrbox:
-            function (
-              width,
-              height
-            ) {
-
-              const size =
-                Math.min(
-                  175,
-                  width,
-                  height
-                );
-
-              return {
-                width: size,
-                height: size
-              };
-            },
-
-          aspectRatio: 16 / 9,
-
-          videoConstraints: {
-            facingMode: {
-              ideal: "environment"
-            },
-            width: {
-              ideal: 1920
-            },
-            height: {
-              ideal: 1080
-            },
-            frameRate: {
-              ideal: 15,
-              max: 30
-            }
-          }
-
-        },
-
-        handleScan,
-
-        function () {
-          // Ignore frames that do not contain
-          // a readable QR code.
-        }
-      );
-
-
-      scanning =
-        true;
-
-
-      scanButton.textContent =
-        "Stop Scanner";
-
-
-      await setupZoomControl();
-
-
-      setMessage(
-        zoomSupported
-          ? "Camera started. Point it at the QR code. Use the zoom slider if needed."
-          : "Camera started. Point it at the QR code on your membership card."
-      );
-
-
-    } catch (error) {
-
-      console.error(
-        "Scanner startup error:",
-        error
-      );
-
-      scanning =
-        false;
-
-      scannerControls.classList.remove("active");
-
-      reader.style.display =
-        "none";
-
-      setMessage(
-        "Camera could not start. " +
-        "Allow camera access in Safari or Chrome, " +
-        "make sure this page is using HTTPS, " +
-        "close other apps using the camera, and try again. " +
-        "Details: " +
-        (error.message || error),
-        "error"
-      );
-
-    } finally {
-
-      scanButton.disabled =
-        false;
-    }
-  }
-);
-
-
-// Stop the camera when the page is hidden.
-document.addEventListener(
-  "visibilitychange",
-  async function () {
-
-    if (
-      document.hidden &&
-      scanning
-    ) {
-
-      await stopScanner();
-
-      scanButton.textContent =
-        "Scan Membership QR";
-    }
+    await startScanner();
   }
 );
 
@@ -1197,6 +1009,9 @@ qrInput.addEventListener(
 
       validMembership =
         false;
+
+      customerTypeInput.value =
+        "";
 
       nameInput.disabled =
         true;
@@ -1372,6 +1187,9 @@ registerButton.addEventListener(
         qrInput.disabled =
           true;
 
+        customerTypeInput.disabled =
+          true;
+
         verifyButton.disabled =
           true;
 
@@ -1434,6 +1252,39 @@ registerButton.addEventListener(
         registerButton.textContent =
           "Register Membership";
       }
+    }
+  }
+);
+
+
+// ==================================================
+// CAMERA CLEANUP
+// ==================================================
+
+document.addEventListener(
+  "visibilitychange",
+  async function () {
+
+    if (
+      document.hidden &&
+      scanning
+    ) {
+
+      await stopScanner();
+
+      scanButton.textContent =
+        "Scan Membership QR";
+    }
+  }
+);
+
+
+window.addEventListener(
+  "pagehide",
+  function () {
+
+    if (scanner) {
+      scanner.stop().catch(() => {});
     }
   }
 );
