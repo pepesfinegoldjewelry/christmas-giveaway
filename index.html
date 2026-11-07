@@ -120,14 +120,59 @@ button:disabled {
   width: 100%;
   margin-top: 12px;
   overflow: hidden;
+  border-radius: 12px;
+  background: #111;
 }
 
 #reader video {
+  display: block;
+  width: 100% !important;
   max-width: 100%;
+  min-height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
 }
 
 #reader:empty {
   display: none;
+}
+
+.scanner-controls {
+  display: none;
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: #f2f5f3;
+  border-radius: 10px;
+}
+
+.scanner-controls.active {
+  display: block;
+}
+
+.scanner-controls label {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.zoom-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#zoomSlider {
+  flex: 1;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.zoom-value {
+  min-width: 48px;
+  text-align: right;
+  font-size: 13px;
+  color: #647067;
 }
 
 #customerType {
@@ -191,6 +236,22 @@ button:disabled {
   </button>
 
   <div id="reader"></div>
+
+  <div id="scannerControls" class="scanner-controls">
+    <label for="zoomSlider">Camera Zoom</label>
+    <div class="zoom-row">
+      <input
+        id="zoomSlider"
+        type="range"
+        min="1"
+        max="1"
+        step="0.1"
+        value="1"
+        aria-label="Camera zoom"
+      >
+      <span id="zoomValue" class="zoom-value">1×</span>
+    </div>
+  </div>
 
 
   <!-- ==========================================
@@ -366,6 +427,15 @@ const scanButton =
 const reader =
   document.getElementById("reader");
 
+const scannerControls =
+  document.getElementById("scannerControls");
+
+const zoomSlider =
+  document.getElementById("zoomSlider");
+
+const zoomValue =
+  document.getElementById("zoomValue");
+
 
 // ==================================================
 // STATE
@@ -378,6 +448,14 @@ let scanning = false;
 let validMembership = false;
 
 let busy = false;
+
+let zoomSupported = false;
+
+let zoomMin = 1;
+
+let zoomMax = 1;
+
+let zoomStep = 0.1;
 
 
 // ==================================================
@@ -520,6 +598,10 @@ async function stopScanner() {
 
     scanning = false;
   }
+
+  scannerControls.classList.remove("active");
+
+  reader.style.display = "none";
 }
 
 
@@ -756,6 +838,149 @@ async function handleScan(
 // START / STOP SCANNER
 // ==================================================
 
+async function setupZoomControl() {
+
+  zoomSupported = false;
+  zoomMin = 1;
+  zoomMax = 1;
+  zoomStep = 0.1;
+
+  scannerControls.classList.remove("active");
+
+  if (!scanner || !scanning) {
+    return;
+  }
+
+  try {
+
+    const capabilities =
+      scanner.getRunningTrackCameraCapabilities();
+
+    if (
+      !capabilities ||
+      !capabilities.zoom
+    ) {
+      return;
+    }
+
+    const zoom =
+      capabilities.zoom;
+
+    if (
+      typeof zoom.min !== "number" ||
+      typeof zoom.max !== "number"
+    ) {
+      return;
+    }
+
+    zoomMin = zoom.min;
+    zoomMax = zoom.max;
+
+    zoomStep =
+      typeof zoom.step === "number" && zoom.step > 0
+        ? zoom.step
+        : 0.1;
+
+    zoomSupported =
+      zoomMax > zoomMin;
+
+    if (!zoomSupported) {
+      return;
+    }
+
+    const currentZoom =
+      typeof zoom.current === "number"
+        ? zoom.current
+        : zoomMin;
+
+    zoomSlider.min =
+      String(zoomMin);
+
+    zoomSlider.max =
+      String(zoomMax);
+
+    zoomSlider.step =
+      String(zoomStep);
+
+    zoomSlider.value =
+      String(
+        Math.min(
+          zoomMax,
+          Math.max(
+            zoomMin,
+            currentZoom
+          )
+        )
+      );
+
+    zoomValue.textContent =
+      Number(zoomSlider.value).toFixed(1) + "×";
+
+    scannerControls.classList.add("active");
+
+  } catch (error) {
+
+    console.warn(
+      "Camera zoom is not available:",
+      error
+    );
+
+    zoomSupported = false;
+    scannerControls.classList.remove("active");
+  }
+}
+
+
+async function applyZoom(value) {
+
+  if (
+    !scanner ||
+    !scanning ||
+    !zoomSupported
+  ) {
+    return;
+  }
+
+  const zoom =
+    Math.min(
+      zoomMax,
+      Math.max(
+        zoomMin,
+        Number(value)
+      )
+    );
+
+  zoomValue.textContent =
+    zoom.toFixed(1) + "×";
+
+  try {
+
+    await scanner.applyVideoConstraints({
+      advanced: [
+        {
+          zoom: zoom
+        }
+      ]
+    });
+
+  } catch (error) {
+
+    console.warn(
+      "Could not apply camera zoom:",
+      error
+    );
+  }
+}
+
+
+zoomSlider.addEventListener(
+  "input",
+  function () {
+    applyZoom(zoomSlider.value);
+  }
+);
+
+
 scanButton.addEventListener(
   "click",
   async function () {
@@ -826,7 +1051,7 @@ scanButton.addEventListener(
         },
 
         {
-          fps: 10,
+          fps: 15,
 
           qrbox:
             function (
@@ -835,12 +1060,10 @@ scanButton.addEventListener(
             ) {
 
               const size =
-                Math.floor(
-                  Math.min(
-                    width,
-                    height,
-                    280
-                  )
+                Math.min(
+                  175,
+                  width,
+                  height
                 );
 
               return {
@@ -849,7 +1072,24 @@ scanButton.addEventListener(
               };
             },
 
-          aspectRatio: 1
+          aspectRatio: 16 / 9,
+
+          videoConstraints: {
+            facingMode: {
+              ideal: "environment"
+            },
+            width: {
+              ideal: 1920
+            },
+            height: {
+              ideal: 1080
+            },
+            frameRate: {
+              ideal: 15,
+              max: 30
+            }
+          }
+
         },
 
         handleScan,
@@ -864,12 +1104,18 @@ scanButton.addEventListener(
       scanning =
         true;
 
+
       scanButton.textContent =
         "Stop Scanner";
 
 
+      await setupZoomControl();
+
+
       setMessage(
-        "Camera started. Point it at the QR code on your membership card."
+        zoomSupported
+          ? "Camera started. Point it at the QR code. Use the zoom slider if needed."
+          : "Camera started. Point it at the QR code on your membership card."
       );
 
 
@@ -880,10 +1126,18 @@ scanButton.addEventListener(
         error
       );
 
+      scanning =
+        false;
+
+      scannerControls.classList.remove("active");
+
+      reader.style.display =
+        "none";
 
       setMessage(
         "Camera could not start. " +
         "Allow camera access in Safari or Chrome, " +
+        "make sure this page is using HTTPS, " +
         "close other apps using the camera, and try again. " +
         "Details: " +
         (error.message || error),
@@ -894,6 +1148,25 @@ scanButton.addEventListener(
 
       scanButton.disabled =
         false;
+    }
+  }
+);
+
+
+// Stop the camera when the page is hidden.
+document.addEventListener(
+  "visibilitychange",
+  async function () {
+
+    if (
+      document.hidden &&
+      scanning
+    ) {
+
+      await stopScanner();
+
+      scanButton.textContent =
+        "Scan Membership QR";
     }
   }
 );
