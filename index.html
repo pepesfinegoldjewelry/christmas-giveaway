@@ -290,13 +290,13 @@ button:disabled {
        MEMBERSHIP INFORMATION
        ========================================== -->
 
-  <!-- <div
+  <div
     id="membershipInfo"
     class="msg"
     aria-live="polite"
   >
     Please scan or enter your Membership ID, then verify it.
-  </div> -->
+  </div>
 
 
   <!-- ==========================================
@@ -751,7 +751,7 @@ async function handleScan(
   decodedText
 ) {
 
-  if (!scanning || busy || cameraStarting) {
+  if (busy || cameraStarting) {
     return;
   }
 
@@ -869,6 +869,8 @@ async function startScanner() {
       }
     };
 
+    scanning = true;
+
     await scanner.start(
       {
         facingMode: "environment"
@@ -879,8 +881,6 @@ async function startScanner() {
         // Ignore unreadable frames.
       }
     );
-
-    scanning = true;
 
     scanButton.textContent =
       "Stop Scanner";
